@@ -1,11 +1,12 @@
 import { z } from 'zod';
+import type { GeoJSON } from 'geojson';
 
 const objectItemSchema = z.object({
   nameUz: z.string().min(1, 'Nomi kiritilishi shart').max(200).optional(),
   nameKrill: z.string().max(200).optional(),
   registryNumber: z.string().max(50).optional(),
   objectTypeId: z.number().int().positive().optional(),
-  geometry: z.looseObject({ type: z.string() }),
+  geometry: z.custom<GeoJSON>(),
 });
 
 export const createGeographicObjectSchema = z.object({
