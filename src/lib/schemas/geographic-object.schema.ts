@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { GeoJSON } from 'geojson';
+import type { GeoJSON } from '@/types/geographic-object';
 
 const objectItemSchema = z.object({
   nameUz: z.string().min(1, 'Nomi kiritilishi shart').max(200).optional(),
