@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Layout, Button, Avatar, Dropdown } from 'antd';
 import {
   MenuFoldOutlined,
@@ -6,7 +6,7 @@ import {
   UserOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
-import { Outlet, useNavigate } from 'react-router';
+import { Outlet, useNavigate, useMatches } from 'react-router';
 import { useMutation } from '@tanstack/react-query';
 import Sidebar from './Sidebar';
 import { useAuthStore } from '@/store/authStore';
@@ -19,6 +19,13 @@ export default function AppLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const { user, clearAuth } = useAuthStore();
   const navigate = useNavigate();
+
+  const matches = useMatches();
+  useEffect(() => {
+    const match = [...matches].reverse().find((m) => (m.handle as { title?: string } | null)?.title);
+    const pageTitle = (match?.handle as { title?: string } | null)?.title;
+    document.title = pageTitle ? `${pageTitle} | Geonomlar` : 'Geonomlar';
+  }, [matches]);
 
   const { mutate: logout } = useMutation({
     mutationFn: authApi.logout,
