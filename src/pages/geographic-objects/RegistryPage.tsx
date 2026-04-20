@@ -6,7 +6,6 @@ import {
   Input,
   Select,
   Button,
-  Tag,
   Typography,
   Space,
   Tooltip,
@@ -34,6 +33,7 @@ import { useRegions, useDistricts } from '@/hooks/locations/useLocations';
 import { useAdminCategories } from '@/hooks/admin/useObjectTypes';
 import type { GeographicObject } from '@/types';
 import type { RegistryParams } from '@/api/geographic-objects.api';
+import { useAuthStore } from '@/store/authStore';
 
 const { Title, Text } = Typography;
 const DEFAULT_LIMIT = 10;
@@ -69,6 +69,7 @@ function CopyableNumber({ value }: { value: string }) {
 
 export default function RegistryPage() {
   const navigate = useNavigate();
+  const isAdmin = useAuthStore((s) => s.user?.role === 'admin');
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Derive filters from URL
@@ -306,7 +307,7 @@ export default function RegistryPage() {
       width: 100,
       fixed: 'right',
       render: (obj: GeographicObject) => (
-        <Space size={4}>
+        <Space size={4} className={!isAdmin ? 'w-full justify-center' : ''}>
           <Tooltip title="Ko'rish">
             <Button
               size='small'
@@ -314,21 +315,25 @@ export default function RegistryPage() {
               onClick={() => navigate(`/geographic-objects/${obj.id}`)}
             />
           </Tooltip>
-          <Tooltip title='Tahrirlash'>
-            <Button
-              size='small'
-              icon={<EditOutlined />}
-              onClick={() => openEdit(obj)}
-            />
-          </Tooltip>
-          <Tooltip title="O'chirish">
-            <Button
-              size='small'
-              danger
-              icon={<DeleteOutlined />}
-              onClick={() => handleDelete(obj.id, obj.nameUz)}
-            />
-          </Tooltip>
+          {isAdmin && (
+            <>
+              <Tooltip title='Tahrirlash'>
+                <Button
+                  size='small'
+                  icon={<EditOutlined />}
+                  onClick={() => openEdit(obj)}
+                />
+              </Tooltip>
+              <Tooltip title="O'chirish">
+                <Button
+                  size='small'
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={() => handleDelete(obj.id, obj.nameUz)}
+                />
+              </Tooltip>
+            </>
+          )}
         </Space>
       ),
     },

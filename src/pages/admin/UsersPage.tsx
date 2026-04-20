@@ -12,6 +12,7 @@ import {
   Typography,
   Switch,
   Tooltip,
+  Card,
 } from 'antd';
 import {
   PlusOutlined,
@@ -36,6 +37,7 @@ import {
 import { ROLE_LABELS } from '@/constants';
 import { COMMISSION_POSITION_LABELS } from '@/types/user';
 import type { User, UserRole } from '@/types';
+import { useAuthStore } from '@/store/authStore';
 
 const { Title, Text } = Typography;
 
@@ -57,6 +59,7 @@ const REGIONAL_ROLES: UserRole[] = [
 type ModalMode = 'create' | 'edit' | 'password';
 
 export default function UsersPage() {
+  const currentUser = useAuthStore((s) => s.user);
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState<string | undefined>();
   const [page, setPage] = useState(1);
@@ -70,7 +73,7 @@ export default function UsersPage() {
     number | undefined
   >();
 
-  const { data, isLoading } = useUsers({
+  const { data, isFetching } = useUsers({
     page,
     limit: 10,
     role: roleFilter,
@@ -212,15 +215,16 @@ export default function UsersPage() {
               onClick={() => openPassword(u)}
             />
           </Tooltip>
-          <Tooltip title="O'chirish">
+          <Tooltip title={currentUser?.id === u.id ? "O'zingizni o'chira olmaysiz" : "O'chirish"}>
             <Popconfirm
               title="Foydalanuvchini o'chirishni tasdiqlaysizmi?"
               onConfirm={() => deleteUser(u.id)}
               okText='Ha'
               cancelText="Yo'q"
               okButtonProps={{ danger: true }}
+              disabled={currentUser?.id === u.id}
             >
-              <Button size='small' danger icon={<DeleteOutlined />} />
+              <Button size='small' danger icon={<DeleteOutlined />} disabled={currentUser?.id === u.id} />
             </Popconfirm>
           </Tooltip>
         </Space>
@@ -273,20 +277,23 @@ export default function UsersPage() {
         />
       </div>
 
-      <Table
-        dataSource={data?.data ?? []}
-        columns={columns}
-        rowKey='id'
-        loading={isLoading}
-        size='small'
-        pagination={{
-          current: page,
-          total: data?.meta.total ?? 0,
-          pageSize: 10,
-          onChange: setPage,
-          showTotal: (t) => `Jami: ${t} ta`,
-        }}
-      />
+      <Card size='small' styles={{ body: { padding: 0 } }}>
+        <Table
+          dataSource={data?.data ?? []}
+          columns={columns}
+          rowKey='id'
+          loading={isFetching}
+          size='small'
+          bordered
+          pagination={{
+            current: page,
+            total: data?.meta.total ?? 0,
+            pageSize: 10,
+            onChange: setPage,
+            showTotal: (t) => `Jami: ${t} ta`,
+          }}
+        />
+      </Card>
 
       <Modal
         open={!!modal}

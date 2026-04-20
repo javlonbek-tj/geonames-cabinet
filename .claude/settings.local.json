@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/j.turdimatov/Desktop/Geonames-frontend/src/**)",
+      "Read(//c/Users/j.turdimatov/Desktop/Geonames-frontend/**)",
+      "Bash(mkdir \"C:\\\\Users\\\\j.turdimatov\\\\Desktop\\\\Geonames-frontend\\\\public\")",
+      "Bash(mv \"C:\\\\Users\\\\j.turdimatov\\\\Desktop\\\\Geonames-frontend\\\\favicon.ico\" \"C:\\\\Users\\\\j.turdimatov\\\\Desktop\\\\Geonames-frontend\\\\public\\\\favicon.ico\")",
+      "Bash(npm run *)"
+    ]
+  }
+}

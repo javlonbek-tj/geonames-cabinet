@@ -7,6 +7,7 @@ import {
   Typography,
   Button,
   Tabs,
+  Card,
   type TableProps,
 } from 'antd';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
@@ -198,24 +199,28 @@ export default function ApplicationsPage() {
         ]}
       />
 
-      <Table
-        rowKey='id'
-        columns={columns}
-        dataSource={data?.data}
-        loading={isLoading}
-        onRow={(record) => ({
-          onClick: () => void navigate(`/applications/${record.id}`),
-          className: 'cursor-pointer',
-        })}
-        pagination={{
-          current: page,
-          pageSize: 10,
-          total: data?.meta.total,
-          showTotal: (total) => `Jami: ${total} ta`,
-          onChange: (p) => setPage(p),
-          showSizeChanger: false,
-        }}
-      />
+      <Card size='small' styles={{ body: { padding: 0 } }}>
+        <Table
+          rowKey='id'
+          columns={columns}
+          dataSource={data?.data}
+          loading={isLoading}
+          size='small'
+          bordered
+          onRow={(record) => ({
+            onClick: () => void navigate(`/applications/${record.id}`),
+            className: 'cursor-pointer',
+          })}
+          pagination={{
+            current: page,
+            pageSize: 10,
+            total: data?.meta.total,
+            showTotal: (total) => `Jami: ${total} ta`,
+            onChange: (p) => setPage(p),
+            showSizeChanger: false,
+          }}
+        />
+      </Card>
     </div>
   );
 }
