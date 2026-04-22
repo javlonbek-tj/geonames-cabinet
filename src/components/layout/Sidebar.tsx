@@ -1,7 +1,8 @@
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Badge } from 'antd';
 import { useLocation, useNavigate } from 'react-router';
 import { useAuthStore } from '@/store/authStore';
 import { menuItems } from '@/constants/menu';
+import { useMyApplicationsCount } from '@/hooks/applications/useMyApplicationsCount';
 import type { UserRole } from '@/types';
 
 const { Sider } = Layout;
@@ -14,12 +15,24 @@ export default function Sidebar({ collapsed }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
+  const { data: myCount } = useMyApplicationsCount();
 
   const visibleItems = menuItems
     .filter(
       (item) => !item.roles || item.roles.includes(user?.role as UserRole),
     )
-    .map(({ key, icon, label }) => ({ key, icon, label }));
+    .map(({ key, icon, label }) => ({
+      key,
+      icon,
+      label:
+        key === '/applications' && myCount ? (
+          <Badge count={myCount} offset={[6, -2]} size='small'>
+            {label}
+          </Badge>
+        ) : (
+          label
+        ),
+    }));
 
   return (
     <Sider

@@ -5,7 +5,6 @@ export interface ApplicationsParams {
   page?: number;
   limit?: number;
   status?: string;
-  tab?: 'active' | 'history';
   applicationNumber?: string;
   regionId?: number;
   districtId?: number;
@@ -14,6 +13,9 @@ export interface ApplicationsParams {
 export const applicationsApi = {
   getAll: (params?: ApplicationsParams) =>
     api.get<PaginatedResponse<Application>>('/applications', { params }),
+
+  getMyCount: () =>
+    api.get<ApiResponse<{ count: number }>>('/applications/my-count'),
 
   getById: (id: number) =>
     api.get<ApiResponse<Application>>(`/applications/${id}`),

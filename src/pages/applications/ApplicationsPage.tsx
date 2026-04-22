@@ -6,7 +6,6 @@ import {
   Input,
   Typography,
   Button,
-  Tabs,
   Card,
   type TableProps,
 } from 'antd';
@@ -83,7 +82,6 @@ const REGIONAL_ROLES = ['dkp_regional', 'regional_commission', 'regional_hokimli
 export default function ApplicationsPage() {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
-  const [tab, setTab] = useState<'active' | 'history'>('active');
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [applicationNumber, setApplicationNumber] = useState<string | undefined>(undefined);
@@ -103,7 +101,6 @@ export default function ApplicationsPage() {
     page,
     limit: 10,
     status,
-    tab: tab === 'history' ? 'history' : undefined,
     applicationNumber: applicationNumber || undefined,
     regionId: isAdmin ? regionId : undefined,
     districtId: isAdmin || isRegional ? districtId : undefined,
@@ -115,11 +112,6 @@ export default function ApplicationsPage() {
     setRegionId(undefined);
     setDistrictId(undefined);
     setPage(1);
-  };
-
-  const handleTabChange = (key: string) => {
-    setTab(key as 'active' | 'history');
-    resetFilters();
   };
 
   return (
@@ -189,15 +181,6 @@ export default function ApplicationsPage() {
           />
         )}
       </div>
-
-      <Tabs
-        activeKey={tab}
-        onChange={handleTabChange}
-        items={[
-          { key: 'active', label: 'Faol' },
-          { key: 'history', label: 'Tarixiy' },
-        ]}
-      />
 
       <Card size='small' styles={{ body: { padding: 0 } }}>
         <Table

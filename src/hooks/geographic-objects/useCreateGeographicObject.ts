@@ -11,7 +11,7 @@ export function useCreateGeographicObject() {
 
   return useMutation({
     mutationFn: geographicObjectsApi.create,
-    onSuccess: ({ data }) => {
+    onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: applicationKeys.all });
       void message.success('Geografik obyekt yaratildi');
       void navigate('/applications');
