@@ -13,9 +13,6 @@ export interface RegistryParams {
 }
 
 export const geographicObjectsApi = {
-  getMyObjects: (params?: { page?: number; limit?: number }) =>
-    api.get<PaginatedResponse<GeographicObject>>('/geographic-objects', { params }),
-
   getRegistry: (params?: RegistryParams) =>
     api.get<PaginatedResponse<GeographicObject>>('/geographic-objects/registry', { params }),
 
@@ -36,10 +33,16 @@ export const geographicObjectsApi = {
 
   updateNames: (
     applicationId: number,
-    objects: Array<{ id: number; nameUz: string; nameKrill?: string; objectTypeId: number }>,
+    objects: Array<{ id: number; nameUz: string; nameKrill?: string }>,
   ) =>
     api.patch<ApiResponse<{ message: string }>>(
       `/geographic-objects/by-application/${applicationId}/names`,
       { objects },
+    ),
+
+  updateGeometry: (id: number, geometry: object) =>
+    api.patch<ApiResponse<GeographicObject>>(
+      `/geographic-objects/${id}/geometry`,
+      { geometry },
     ),
 };

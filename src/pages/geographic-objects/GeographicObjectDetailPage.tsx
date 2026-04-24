@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import {
   Card,
@@ -9,6 +9,7 @@ import {
   Timeline,
   Spin,
   Empty,
+  Tooltip,
 } from 'antd';
 import {
   ArrowLeftOutlined,
@@ -16,9 +17,12 @@ import {
   HistoryOutlined,
   ExpandOutlined,
   CloseOutlined,
+  UploadOutlined,
 } from '@ant-design/icons';
 import GeoJsonMap from '@/components/map/GeoJsonMap';
 import { useGeographicObject } from '@/hooks/geographic-objects/useGeographicObject';
+import { useUpdateGeometry } from '@/hooks/geographic-objects/useUpdateGeometry';
+import { useAuthStore } from '@/store/authStore';
 import {
   STATUS_LABELS,
   ACTION_LABELS,
@@ -43,9 +47,36 @@ const COMMENT_LIMIT = 200;
 export default function GeographicObjectDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const isAdmin = useAuthStore((s) => s.user?.role === 'admin');
   const { data: obj, isLoading } = useGeographicObject(Number(id));
+  const { mutate: updateGeometry, isPending: isUploading } = useUpdateGeometry(Number(id));
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [commentExpanded, setCommentExpanded] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+
+  const handleGeometryFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const json = JSON.parse(ev.target?.result as string);
+        const geometry =
+          json.type === 'FeatureCollection'
+            ? json.features[0]?.geometry
+            : json.type === 'Feature'
+              ? json.geometry
+              : json;
+        if (!geometry) throw new Error();
+        updateGeometry(geometry);
+      } catch {
+        void import('antd').then(({ message }) => message.error("Noto'g'ri GeoJSON format"));
+      } finally {
+        e.target.value = '';
+      }
+    };
+    reader.readAsText(file);
+  };
 
   if (isLoading) {
     return (
@@ -202,15 +233,38 @@ export default function GeographicObjectDetailPage() {
             </span>
           }
           extra={
-            geometry && (
-              <Button
-                size='small'
-                icon={<ExpandOutlined />}
-                onClick={() => setFullscreen(true)}
-              >
-                To'liq ekran
-              </Button>
-            )
+            <div className='flex items-center gap-2'>
+              {isAdmin && (
+                <>
+                  <input
+                    ref={fileInputRef}
+                    type='file'
+                    accept='.geojson,.json'
+                    className='hidden'
+                    onChange={handleGeometryFile}
+                  />
+                  <Tooltip title='Geometriyani yangilash (GeoJSON)'>
+                    <Button
+                      size='small'
+                      icon={<UploadOutlined />}
+                      loading={isUploading}
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      Geometriya
+                    </Button>
+                  </Tooltip>
+                </>
+              )}
+              {geometry && (
+                <Button
+                  size='small'
+                  icon={<ExpandOutlined />}
+                  onClick={() => setFullscreen(true)}
+                >
+                  To'liq ekran
+                </Button>
+              )}
+            </div>
           }
         >
           {geometry ? (

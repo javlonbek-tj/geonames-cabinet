@@ -180,10 +180,7 @@ export default function ApplicationDetailPage() {
   const [activeGeoIdx, setActiveGeoIdx] = useState<number | null>(null);
   const [mapFullscreen, setMapFullscreen] = useState(false);
   const [nameEdits, setNameEdits] = useState<
-    Record<
-      number,
-      { nameUz: string; nameKrill: string; objectTypeId: number | null }
-    >
+    Record<number, { nameUz: string; nameKrill: string }>
   >({});
   // Track which krill fields were manually edited (don't auto-overwrite)
   const [krillManual, setKrillManual] = useState<Record<number, boolean>>({});
@@ -228,7 +225,6 @@ export default function ApplicationDetailPage() {
     nameEdits[geo.id] ?? {
       nameUz: geo.nameUz ?? '',
       nameKrill: geo.nameKrill ?? '',
-      objectTypeId: geo.objectTypeId ?? null,
     };
 
   const canEnterNames =
@@ -242,8 +238,7 @@ export default function ApplicationDetailPage() {
       const edit = getEdit(o);
       return (
         edit.nameUz.trim().length > 0 &&
-        edit.nameKrill.trim().length > 0 &&
-        edit.objectTypeId != null
+        edit.nameKrill.trim().length > 0
       );
     });
   const hasUnsavedEdits = Object.keys(nameEdits).length > 0;
@@ -297,7 +292,6 @@ export default function ApplicationDetailPage() {
         id: geo.id,
         nameUz: edit.nameUz.trim(),
         nameKrill: edit.nameKrill.trim() || undefined,
-        objectTypeId: edit.objectTypeId!,
       };
     });
     saveNames(objects, {
@@ -313,7 +307,6 @@ export default function ApplicationDetailPage() {
       const current = prev[geo.id] ?? {
         nameUz: geo.nameUz ?? '',
         nameKrill: geo.nameKrill ?? '',
-        objectTypeId: geo.objectTypeId ?? null,
       };
       const nameKrill = krillManual[geo.id]
         ? current.nameKrill
@@ -328,7 +321,6 @@ export default function ApplicationDetailPage() {
       const current = prev[geo.id] ?? {
         nameUz: geo.nameUz ?? '',
         nameKrill: geo.nameKrill ?? '',
-        objectTypeId: geo.objectTypeId ?? null,
       };
       return { ...prev, [geo.id]: { ...current, nameKrill: value } };
     });
@@ -389,26 +381,10 @@ export default function ApplicationDetailPage() {
       render: (geo: GeographicObject) => {
         if (canEnterNames) {
           return (
-            <Select
+            <Input
               size='small'
-              style={{ width: '100%', minWidth: 180 }}
-              placeholder='Tur tanlang'
-              value={getEdit(geo).objectTypeId ?? undefined}
-              status={getEdit(geo).objectTypeId == null ? 'error' : undefined}
-              options={allObjectTypes.map((t) => ({
-                value: t.id,
-                label: t.nameUz,
-              }))}
-              showSearch
-              filterOption={(input, opt) =>
-                (opt?.label ?? '').toLowerCase().includes(input.toLowerCase())
-              }
-              onChange={(val) =>
-                setNameEdits((prev) => ({
-                  ...prev,
-                  [geo.id]: { ...getEdit(geo), objectTypeId: val },
-                }))
-              }
+              disabled
+              value={geo.objectType?.nameUz ?? '—'}
             />
           );
         }

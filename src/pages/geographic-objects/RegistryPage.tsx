@@ -38,6 +38,9 @@ import { useAuthStore } from '@/store/authStore';
 const { Title, Text } = Typography;
 const DEFAULT_LIMIT = 10;
 
+const DISTRICT_ROLES = ['dkp_filial', 'district_commission', 'district_hokimlik'];
+const REGIONAL_ROLES = ['dkp_regional', 'regional_commission', 'regional_hokimlik'];
+
 function CopyableNumber({ value }: { value: string }) {
   const [copied, setCopied] = useLocalState(false);
   const copy = () => {
@@ -69,7 +72,10 @@ function CopyableNumber({ value }: { value: string }) {
 
 export default function RegistryPage() {
   const navigate = useNavigate();
-  const isAdmin = useAuthStore((s) => s.user?.role === 'admin');
+  const user = useAuthStore((s) => s.user);
+  const isAdmin = user?.role === 'admin';
+  const isDistrictRole = DISTRICT_ROLES.includes(user?.role ?? '');
+  const isRegionalRole = REGIONAL_ROLES.includes(user?.role ?? '');
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Derive filters from URL
@@ -121,7 +127,8 @@ export default function RegistryPage() {
 
   const { data, isFetching } = useRegistry(filters);
   const { data: regions = [] } = useRegions();
-  const { data: filterDistricts = [] } = useDistricts(filters.regionId);
+  const districtRegionId = isRegionalRole ? (user?.regionId ?? undefined) : filters.regionId;
+  const { data: filterDistricts = [] } = useDistricts(districtRegionId);
   const { data: editDistricts = [] } = useDistricts(
     editForm.getFieldValue('regionId'),
   );
@@ -365,41 +372,45 @@ export default function RegistryPage() {
               }}
             />
           </div>
-          <div className='w-44'>
-            <div className='text-xs text-gray-500 mb-1'>Viloyat</div>
-            <Select
-              placeholder='Barchasi'
-              allowClear
-              className='w-full'
-              value={filters.regionId}
-              options={regions.map((r) => ({ value: r.id, label: r.nameUz }))}
-              onChange={(v) =>
-                setFilters((f) => ({
-                  ...f,
-                  page: 1,
-                  regionId: v,
-                  districtId: undefined,
-                }))
-              }
-            />
-          </div>
-          <div className='w-44'>
-            <div className='text-xs text-gray-500 mb-1'>Tuman</div>
-            <Select
-              placeholder='Barchasi'
-              allowClear
-              className='w-full'
-              disabled={!filters.regionId}
-              value={filters.districtId}
-              options={filterDistricts.map((d) => ({
-                value: d.id,
-                label: d.nameUz,
-              }))}
-              onChange={(v) =>
-                setFilters((f) => ({ ...f, page: 1, districtId: v }))
-              }
-            />
-          </div>
+          {!isDistrictRole && !isRegionalRole && (
+            <div className='w-44'>
+              <div className='text-xs text-gray-500 mb-1'>Viloyat</div>
+              <Select
+                placeholder='Barchasi'
+                allowClear
+                className='w-full'
+                value={filters.regionId}
+                options={regions.map((r) => ({ value: r.id, label: r.nameUz }))}
+                onChange={(v) =>
+                  setFilters((f) => ({
+                    ...f,
+                    page: 1,
+                    regionId: v,
+                    districtId: undefined,
+                  }))
+                }
+              />
+            </div>
+          )}
+          {!isDistrictRole && (
+            <div className='w-44'>
+              <div className='text-xs text-gray-500 mb-1'>Tuman</div>
+              <Select
+                placeholder='Barchasi'
+                allowClear
+                className='w-full'
+                disabled={!isRegionalRole && !filters.regionId}
+                value={filters.districtId}
+                options={filterDistricts.map((d) => ({
+                  value: d.id,
+                  label: d.nameUz,
+                }))}
+                onChange={(v) =>
+                  setFilters((f) => ({ ...f, page: 1, districtId: v }))
+                }
+              />
+            </div>
+          )}
           <div className='w-48'>
             <div className='text-xs text-gray-500 mb-1'>Guruh</div>
             <Select

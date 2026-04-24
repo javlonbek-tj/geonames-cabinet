@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 import { App } from 'antd';
 import { authApi } from '@/api/auth.api';
@@ -16,6 +16,7 @@ type ApiError = {
 
 export function useLogin() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const setAuth = useAuthStore((s) => s.setAuth);
   const { message } = App.useApp();
   const [retryAfter, setRetryAfter] = useState<number | null>(null);
@@ -24,6 +25,7 @@ export function useLogin() {
     mutationFn: (data: LoginSchema) => authApi.login(data),
     onSuccess: ({ data }) => {
       setAuth(data.data.accessToken, data.data.user);
+      queryClient.clear();
       void navigate('/');
     },
     onError: (error: ApiError) => {

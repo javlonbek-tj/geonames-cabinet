@@ -5,6 +5,7 @@ import {
   MenuUnfoldOutlined,
   UserOutlined,
   LogoutOutlined,
+  LockOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useMatches } from 'react-router';
 import { useMutation } from '@tanstack/react-query';
@@ -12,17 +13,22 @@ import Sidebar from './Sidebar';
 import { useAuthStore } from '@/store/authStore';
 import { authApi } from '@/api/auth.api';
 import { ROLE_LABELS } from '@/constants';
+import { useIdleTimeout } from '@/hooks/useIdleTimeout';
+import ChangePasswordModal from '@/components/auth/ChangePasswordModal';
 
 const { Header, Content } = Layout;
 
 export default function AppLayout() {
   const [collapsed, setCollapsed] = useState(false);
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const { user, clearAuth } = useAuthStore();
   const navigate = useNavigate();
 
   const matches = useMatches();
   useEffect(() => {
-    const match = [...matches].reverse().find((m) => (m.handle as { title?: string } | null)?.title);
+    const match = [...matches]
+      .reverse()
+      .find((m) => (m.handle as { title?: string } | null)?.title);
     const pageTitle = (match?.handle as { title?: string } | null)?.title;
     document.title = pageTitle ? `${pageTitle} | Geonomlar` : 'Geonomlar';
   }, [matches]);
@@ -35,7 +41,16 @@ export default function AppLayout() {
     },
   });
 
+  useIdleTimeout(() => logout());
+
   const dropdownItems = [
+    {
+      key: 'change-password',
+      icon: <LockOutlined />,
+      label: "Parolni o'zgartirish",
+      onClick: () => setChangePasswordOpen(true),
+    },
+    { type: 'divider' as const },
     {
       key: 'logout',
       icon: <LogoutOutlined />,
@@ -82,6 +97,10 @@ export default function AppLayout() {
           <Outlet />
         </Content>
       </Layout>
+      <ChangePasswordModal
+        open={changePasswordOpen}
+        onClose={() => setChangePasswordOpen(false)}
+      />
     </Layout>
   );
 }

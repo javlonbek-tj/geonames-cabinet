@@ -1,6 +1,6 @@
 import api from './axios';
 import type { ApiResponse, ApiMessage, AuthResponse } from '@/types';
-import type { LoginSchema } from '@/lib/schemas/auth.schema';
+import type { LoginSchema, ChangePasswordSchema } from '@/lib/schemas/auth.schema';
 
 export const authApi = {
   login: async (data: LoginSchema) =>
@@ -9,4 +9,7 @@ export const authApi = {
   logout: () => api.post<ApiMessage>('/auth/logout'),
 
   me: () => api.get<ApiResponse<AuthResponse>>('/auth/me'),
+
+  changePassword: (data: ChangePasswordSchema) =>
+    api.patch<ApiMessage>('/auth/change-password', data),
 };
