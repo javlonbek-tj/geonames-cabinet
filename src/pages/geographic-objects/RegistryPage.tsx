@@ -14,7 +14,7 @@ import {
   message,
 } from 'antd';
 import {
-  SearchOutlined,
+
   ClearOutlined,
   EditOutlined,
   DeleteOutlined,
@@ -356,20 +356,17 @@ export default function RegistryPage() {
       <Card size='small'>
         <div className='flex flex-wrap gap-2 items-end'>
           <div className='flex-1 min-w-48'>
-            <div className='text-xs text-gray-500 mb-1'>
-              Qidirish (nomi bo'yicha)
-            </div>
-            <Input
+            <div className='text-xs text-gray-500 mb-1'>Qidirish</div>
+            <Input.Search
               placeholder="Nom yoki reyestr raqami bo'yicha..."
-              prefix={<SearchOutlined className='text-gray-400' />}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              onPressEnter={applySearch}
-              allowClear
+              onSearch={applySearch}
               onClear={() => {
                 setSearchInput('');
                 setFilters((f) => ({ ...f, page: 1, search: undefined }));
               }}
+              allowClear
             />
           </div>
           {!isDistrictRole && !isRegionalRole && (
@@ -449,20 +446,16 @@ export default function RegistryPage() {
               }
             />
           </div>
-          <Space>
+          <div>
+            <div className='text-xs text-gray-500 mb-1 invisible'>.</div>
             <Button
-              type='primary'
-              icon={<SearchOutlined />}
-              onClick={applySearch}
+              icon={<ClearOutlined />}
+              onClick={clearFilters}
+              disabled={!hasFilters}
             >
-              Qidirish
+              Tozalash
             </Button>
-            {hasFilters && (
-              <Button icon={<ClearOutlined />} onClick={clearFilters}>
-                Tozalash
-              </Button>
-            )}
-          </Space>
+          </div>
         </div>
       </Card>
 
@@ -477,6 +470,7 @@ export default function RegistryPage() {
             current: filters.page ?? 1,
             pageSize: filters.limit ?? DEFAULT_LIMIT,
             total: data?.meta.total ?? 0,
+            hideOnSinglePage: true,
             showSizeChanger: true,
             pageSizeOptions: ['10', '20', '50', '100'],
             showTotal: (total) => (

@@ -25,9 +25,16 @@ export function useToggleGeoFlag(applicationId: number) {
   });
 }
 
-export function useNonCompliantList() {
+export function useNonCompliantList(params?: {
+  regionId?: number;
+  districtId?: number;
+  search?: string;
+  page?: number;
+  limit?: number;
+}) {
   return useQuery({
-    queryKey: ['non-compliant'],
-    queryFn: api.listNonCompliant,
+    queryKey: ['non-compliant', params],
+    queryFn: () => api.listNonCompliant(params),
+    placeholderData: (prev) => prev,
   });
 }

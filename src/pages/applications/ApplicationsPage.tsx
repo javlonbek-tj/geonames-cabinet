@@ -9,7 +9,7 @@ import {
   Card,
   type TableProps,
 } from 'antd';
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import { useApplications } from '@/hooks/applications/useApplications';
 import { useRegions, useDistricts } from '@/hooks/locations/useLocations';
@@ -77,13 +77,19 @@ const columns: TableProps<Application>['columns'] = [
   },
 ];
 
-const REGIONAL_ROLES = ['dkp_regional', 'regional_commission', 'regional_hokimlik'];
+const REGIONAL_ROLES = [
+  'dkp_regional',
+  'regional_commission',
+  'regional_hokimlik',
+];
 
 export default function ApplicationsPage() {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const [status, setStatus] = useState<string | undefined>(undefined);
+  const [applicationNumberInput, setApplicationNumberInput] = useState('');
   const [applicationNumber, setApplicationNumber] = useState<string | undefined>(undefined);
   const [regionId, setRegionId] = useState<number | undefined>(undefined);
   const [districtId, setDistrictId] = useState<number | undefined>(undefined);
@@ -99,20 +105,12 @@ export default function ApplicationsPage() {
 
   const { data, isLoading } = useApplications({
     page,
-    limit: 10,
+    limit,
     status,
     applicationNumber: applicationNumber || undefined,
     regionId: isAdmin ? regionId : undefined,
     districtId: isAdmin || isRegional ? districtId : undefined,
   });
-
-  const resetFilters = () => {
-    setStatus(undefined);
-    setApplicationNumber(undefined);
-    setRegionId(undefined);
-    setDistrictId(undefined);
-    setPage(1);
-  };
 
   return (
     <div className='flex flex-col gap-4'>
@@ -133,16 +131,14 @@ export default function ApplicationsPage() {
 
       {/* Filters */}
       <div className='flex flex-wrap items-center gap-2'>
-        <Input
-          prefix={<SearchOutlined style={{ color: '#9ca3af' }} />}
+        <Input.Search
           placeholder='Ariza raqami'
           allowClear
-          value={applicationNumber}
-          onChange={(e) => {
-            setApplicationNumber(e.target.value || undefined);
-            setPage(1);
-          }}
-          style={{ width: 200 }}
+          value={applicationNumberInput}
+          onChange={(e) => setApplicationNumberInput(e.target.value)}
+          onSearch={(val) => { setApplicationNumber(val || undefined); setPage(1); }}
+          onClear={() => { setApplicationNumberInput(''); setApplicationNumber(undefined); }}
+          style={{ width: 220 }}
         />
 
         <Select
@@ -150,7 +146,10 @@ export default function ApplicationsPage() {
           placeholder="Holat bo'yicha"
           options={STATUS_OPTIONS}
           value={status}
-          onChange={(val) => { setStatus(val); setPage(1); }}
+          onChange={(val) => {
+            setStatus(val);
+            setPage(1);
+          }}
           style={{ width: 260 }}
         />
 
@@ -175,7 +174,10 @@ export default function ApplicationsPage() {
             placeholder='Tuman'
             options={districts?.map((d) => ({ value: d.id, label: d.nameUz }))}
             value={districtId}
-            onChange={(val) => { setDistrictId(val); setPage(1); }}
+            onChange={(val) => {
+              setDistrictId(val);
+              setPage(1);
+            }}
             disabled={isAdmin && !regionId}
             style={{ width: 200 }}
           />
@@ -196,11 +198,17 @@ export default function ApplicationsPage() {
           })}
           pagination={{
             current: page,
-            pageSize: 10,
-            total: data?.meta.total,
-            showTotal: (total) => `Jami: ${total} ta`,
-            onChange: (p) => setPage(p),
-            showSizeChanger: false,
+            pageSize: limit,
+            total: data?.meta.total ?? 0,
+            hideOnSinglePage: true,
+            showSizeChanger: true,
+            pageSizeOptions: ['10', '20', '50', '100'],
+            showTotal: (total) => (
+              <span className='inline-flex items-center gap-1 px-3 py-0.5 rounded text-sm font-medium text-blue-600 bg-blue-50'>
+                Jami: {total} ta
+              </span>
+            ),
+            onChange: (p, ps) => { setPage(p); setLimit(ps); },
           }}
         />
       </Card>

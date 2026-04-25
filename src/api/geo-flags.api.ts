@@ -33,7 +33,13 @@ export async function getApplicationFlags(
   return res.data.data;
 }
 
-export async function listNonCompliant(): Promise<NonCompliantItem[]> {
-  const res = await api.get('/geo-flags/non-compliant');
-  return res.data.data;
+export async function listNonCompliant(params?: {
+  regionId?: number;
+  districtId?: number;
+  search?: string;
+  page?: number;
+  limit?: number;
+}): Promise<{ data: NonCompliantItem[]; meta: { total: number; page: number; limit: number; totalPages: number } }> {
+  const res = await api.get('/geo-flags/non-compliant', { params });
+  return { data: res.data.data, meta: res.data.meta };
 }

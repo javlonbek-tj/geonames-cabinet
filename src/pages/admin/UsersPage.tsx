@@ -19,7 +19,6 @@ import {
   EditOutlined,
   DeleteOutlined,
   LockOutlined,
-  SearchOutlined,
 } from '@ant-design/icons';
 import {
   useUsers,
@@ -60,9 +59,11 @@ type ModalMode = 'create' | 'edit' | 'password';
 
 export default function UsersPage() {
   const currentUser = useAuthStore((s) => s.user);
+  const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState<string | undefined>();
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   const [modal, setModal] = useState<{ mode: ModalMode; user?: User } | null>(
     null,
@@ -75,7 +76,7 @@ export default function UsersPage() {
 
   const { data, isFetching } = useUsers({
     page,
-    limit: 10,
+    limit,
     role: roleFilter,
     search: search || undefined,
   });
@@ -253,14 +254,12 @@ export default function UsersPage() {
       </div>
 
       <div className='flex gap-2'>
-        <Input
-          prefix={<SearchOutlined />}
+        <Input.Search
           placeholder="Username bo'yicha qidirish"
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(1);
-          }}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          onSearch={(val) => { setSearch(val); setPage(1); }}
+          onClear={() => { setSearchInput(''); setSearch(''); }}
           allowClear
           style={{ maxWidth: 260 }}
         />
@@ -287,10 +286,17 @@ export default function UsersPage() {
           bordered
           pagination={{
             current: page,
+            pageSize: limit,
             total: data?.meta.total ?? 0,
-            pageSize: 10,
-            onChange: setPage,
-            showTotal: (t) => `Jami: ${t} ta`,
+            hideOnSinglePage: true,
+            showSizeChanger: true,
+            pageSizeOptions: ['10', '20', '50', '100'],
+            showTotal: (total) => (
+              <span className='inline-flex items-center gap-1 px-3 py-0.5 rounded text-sm font-medium text-blue-600 bg-blue-50'>
+                Jami: {total} ta
+              </span>
+            ),
+            onChange: (p, ps) => { setPage(p); setLimit(ps); },
           }}
         />
       </Card>
