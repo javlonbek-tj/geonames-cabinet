@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 import { App } from 'antd';
@@ -19,7 +19,23 @@ export function useLogin() {
   const queryClient = useQueryClient();
   const setAuth = useAuthStore((s) => s.setAuth);
   const { message } = App.useApp();
-  const [retryAfter, setRetryAfter] = useState<number | null>(null);
+  const [countdown, setCountdown] = useState<number | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startCountdown = (seconds: number) => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    setCountdown(seconds);
+    intervalRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev === null || prev <= 1) {
+          clearInterval(intervalRef.current!);
+          intervalRef.current = null;
+          return null;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
 
   const mutation = useMutation({
     mutationFn: (data: LoginSchema) => authApi.login(data),
@@ -31,12 +47,12 @@ export function useLogin() {
     onError: (error: ApiError) => {
       if (error.response?.status === 429) {
         const seconds = parseInt(error.response.headers?.['retry-after'] ?? '60');
-        setRetryAfter(seconds);
+        startCountdown(seconds);
       } else {
         void message.error(error.response?.data?.message ?? 'Xatolik yuz berdi');
       }
     },
   });
 
-  return { ...mutation, retryAfter, clearRetryAfter: () => setRetryAfter(null) };
+  return { ...mutation, countdown };
 }

@@ -25,6 +25,7 @@ export default function AppLayout() {
   const navigate = useNavigate();
 
   const matches = useMatches();
+  console.log('matches', matches);
   useEffect(() => {
     const match = [...matches]
       .reverse()

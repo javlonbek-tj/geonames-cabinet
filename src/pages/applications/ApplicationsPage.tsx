@@ -90,7 +90,9 @@ export default function ApplicationsPage() {
   const [limit, setLimit] = useState(10);
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [applicationNumberInput, setApplicationNumberInput] = useState('');
-  const [applicationNumber, setApplicationNumber] = useState<string | undefined>(undefined);
+  const [applicationNumber, setApplicationNumber] = useState<
+    string | undefined
+  >(undefined);
   const [regionId, setRegionId] = useState<number | undefined>(undefined);
   const [districtId, setDistrictId] = useState<number | undefined>(undefined);
 
@@ -136,8 +138,14 @@ export default function ApplicationsPage() {
           allowClear
           value={applicationNumberInput}
           onChange={(e) => setApplicationNumberInput(e.target.value)}
-          onSearch={(val) => { setApplicationNumber(val || undefined); setPage(1); }}
-          onClear={() => { setApplicationNumberInput(''); setApplicationNumber(undefined); }}
+          onSearch={(val) => {
+            setApplicationNumber(val || undefined);
+            setPage(1);
+          }}
+          onClear={() => {
+            setApplicationNumberInput('');
+            setApplicationNumber(undefined);
+          }}
           style={{ width: 220 }}
         />
 
@@ -208,7 +216,10 @@ export default function ApplicationsPage() {
                 Jami: {total} ta
               </span>
             ),
-            onChange: (p, ps) => { setPage(p); setLimit(ps); },
+            onChange: (p, ps) => {
+              setPage(p);
+              setLimit(ps);
+            },
           }}
         />
       </Card>

@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Input, Button, Spin } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useForm, Controller } from 'react-hook-form';
@@ -10,8 +9,7 @@ const inputClass =
   'bg-transparent border-0 border-b-2 border-b-[#CBDDF1] rounded-none shadow-none text-[#e0e0ff] pl-0';
 
 export default function LoginPage() {
-  const { mutate, isPending, retryAfter, clearRetryAfter } = useLogin();
-  const [countdown, setCountdown] = useState<number | null>(null);
+  const { mutate, isPending, countdown } = useLogin();
 
   const {
     control,
@@ -21,24 +19,6 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
     defaultValues: { username: '', password: '' },
   });
-
-  useEffect(() => {
-    if (!retryAfter) return;
-    setCountdown(retryAfter);
-
-    const interval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev === null || prev <= 1) {
-          clearInterval(interval);
-          clearRetryAfter();
-          return null;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [retryAfter]);
 
   const isBlocked = countdown !== null;
   const onSubmit = handleSubmit((values) => {
@@ -122,7 +102,8 @@ export default function LoginPage() {
 
           {isBlocked && (
             <p className='text-xs text-red-400 text-center -mt-2'>
-              Juda ko&apos;p urinish. {countdown} soniyadan keyin qayta urinib ko&apos;ring.
+              Juda ko&apos;p urinish. {countdown} soniyadan keyin qayta urinib
+              ko&apos;ring.
             </p>
           )}
 
