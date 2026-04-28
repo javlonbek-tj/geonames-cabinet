@@ -23,6 +23,7 @@ import GeoJsonMap from '@/components/map/GeoJsonMap';
 import { useGeographicObject } from '@/hooks/geographic-objects/useGeographicObject';
 import { useUpdateGeometry } from '@/hooks/geographic-objects/useUpdateGeometry';
 import { useAuthStore } from '@/store/authStore';
+import { ROLES } from '@/types/user';
 import {
   STATUS_LABELS,
   ACTION_LABELS,
@@ -47,7 +48,7 @@ const COMMENT_LIMIT = 200;
 export default function GeographicObjectDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const isAdmin = useAuthStore((s) => s.user?.role === 'admin');
+  const isAdmin = useAuthStore((s) => s.user?.role === ROLES.ADMIN);
   const { data: obj, isLoading } = useGeographicObject(Number(id));
   const { mutate: updateGeometry, isPending: isUploading } = useUpdateGeometry(Number(id));
   const fileInputRef = useRef<HTMLInputElement>(null);

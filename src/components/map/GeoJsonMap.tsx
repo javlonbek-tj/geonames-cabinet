@@ -10,12 +10,23 @@ interface GeoJsonMapProps {
   showLabels?: boolean;
 }
 
-const DEFAULT_STYLE: L.PathOptions = { color: '#1677ff', weight: 2.5, opacity: 0.8, fillOpacity: 0.12 };
-const HIGHLIGHT_STYLE: L.PathOptions = { color: '#fa8c16', weight: 4, opacity: 1, fillOpacity: 0.35 };
+const DEFAULT_STYLE: L.PathOptions = {
+  color: '#1677ff',
+  weight: 2.5,
+  opacity: 0.8,
+  fillOpacity: 0.12,
+};
+const HIGHLIGHT_STYLE: L.PathOptions = {
+  color: '#fa8c16',
+  weight: 4,
+  opacity: 1,
+  fillOpacity: 0.35,
+};
 
 const TILES = {
   osm: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  satellite: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  satellite:
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
 } as const;
 
 type TileKey = keyof typeof TILES;
@@ -41,12 +52,17 @@ export default function GeoJsonMap({
   const tileLayerRef = useRef<L.TileLayer | null>(null);
   const layersRef = useRef<L.Path[]>([]);
   const labelMarkersRef = useRef<L.Marker[]>([]);
-  const highlightedIndexRef = useRef<number | null | undefined>(highlightedIndex);
+  const highlightedIndexRef = useRef<number | null | undefined>(
+    highlightedIndex,
+  );
   const [tileKey, setTileKey] = useState<TileKey>('osm');
 
   useEffect(() => {
     if (!containerRef.current) return;
-    if (mapRef.current) { mapRef.current.remove(); mapRef.current = null; }
+    if (mapRef.current) {
+      mapRef.current.remove();
+      mapRef.current = null;
+    }
     layersRef.current = [];
     labelMarkersRef.current = [];
 
@@ -64,14 +80,16 @@ export default function GeoJsonMap({
         const idx = paths.length;
         paths.push(layer as L.Path);
 
-        const center =
-          (layer as any).getBounds?.()?.isValid?.()
-            ? (layer as any).getBounds().getCenter()
-            : (layer as any).getLatLng?.();
+        const center = (layer as any).getBounds?.()?.isValid?.()
+          ? (layer as any).getBounds().getCenter()
+          : (layer as any).getLatLng?.();
 
         if (center && showLabels) {
           const isHighlighted = highlightedIndexRef.current === idx;
-          const marker = L.marker(center, { icon: makeLabel(idx + 1, isHighlighted), zIndexOffset: 500 });
+          const marker = L.marker(center, {
+            icon: makeLabel(idx + 1, isHighlighted),
+            zIndexOffset: 500,
+          });
 
           const p = feature.properties ?? {};
           const lines: string[] = [];
@@ -80,7 +98,10 @@ export default function GeoJsonMap({
               ? `<strong>${p.name}</strong>`
               : `<span style="color:#aaa">#${idx + 1} — nomi kiritilmagan</span>`,
           );
-          if (p.objectType) lines.push(`<span style="color:#888;font-size:12px">Tur: </span>${p.objectType}`);
+          if (p.objectType)
+            lines.push(
+              `<span style="color:#888;font-size:12px">Tur: </span>${p.objectType}`,
+            );
           marker.bindPopup(lines.join('<br/>'), { maxWidth: 220 });
           marker.on('mouseover', () => marker.openPopup());
           marker.on('mouseout', () => marker.closePopup());
@@ -95,7 +116,9 @@ export default function GeoJsonMap({
     labelMarkersRef.current = markers;
 
     paths.forEach((layer, i) => {
-      (layer as any).setStyle?.(i === highlightedIndexRef.current ? HIGHLIGHT_STYLE : DEFAULT_STYLE);
+      (layer as any).setStyle?.(
+        i === highlightedIndexRef.current ? HIGHLIGHT_STYLE : DEFAULT_STYLE,
+      );
     });
 
     const bounds = geoLayer.getBounds();
@@ -105,7 +128,13 @@ export default function GeoJsonMap({
       map.setView([41.2995, 69.2401], 7);
     }
 
-    return () => { map.remove(); mapRef.current = null; tileLayerRef.current = null; layersRef.current = []; labelMarkersRef.current = []; };
+    return () => {
+      map.remove();
+      mapRef.current = null;
+      tileLayerRef.current = null;
+      layersRef.current = [];
+      labelMarkersRef.current = [];
+    };
   }, [geojson]);
 
   // Tile layer switch
@@ -122,7 +151,9 @@ export default function GeoJsonMap({
   useEffect(() => {
     highlightedIndexRef.current = highlightedIndex;
     layersRef.current.forEach((layer, i) => {
-      (layer as any).setStyle?.(i === highlightedIndex ? HIGHLIGHT_STYLE : DEFAULT_STYLE);
+      (layer as any).setStyle?.(
+        i === highlightedIndex ? HIGHLIGHT_STYLE : DEFAULT_STYLE,
+      );
     });
     labelMarkersRef.current.forEach((marker, i) => {
       marker.setIcon(makeLabel(i + 1, i === highlightedIndex));
@@ -130,13 +161,18 @@ export default function GeoJsonMap({
   }, [highlightedIndex]);
 
   return (
-    <div className="relative w-full rounded-lg overflow-hidden z-0" style={{ height }}>
-      <div ref={containerRef} className="w-full h-full" />
-      <div className="absolute bottom-3 right-3 z-[1000] flex rounded-lg overflow-hidden shadow border border-gray-200 text-xs font-medium">
+    <div
+      className='relative w-full rounded-lg overflow-hidden z-0'
+      style={{ height }}
+    >
+      <div ref={containerRef} className='w-full h-full' />
+      <div className='absolute bottom-3 right-3 z-[1000] flex rounded-lg overflow-hidden shadow border border-gray-200 text-xs font-medium'>
         <button
           onClick={() => setTileKey('osm')}
           className={`px-3 py-1.5 cursor-pointer transition-colors ${
-            tileKey === 'osm' ? 'bg-[#1677ff] text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
+            tileKey === 'osm'
+              ? 'bg-[#1677ff] text-white'
+              : 'bg-white text-gray-600 hover:bg-gray-50'
           }`}
         >
           Xarita
@@ -144,7 +180,9 @@ export default function GeoJsonMap({
         <button
           onClick={() => setTileKey('satellite')}
           className={`px-3 py-1.5 cursor-pointer transition-colors border-l border-gray-200 ${
-            tileKey === 'satellite' ? 'bg-[#1677ff] text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
+            tileKey === 'satellite'
+              ? 'bg-[#1677ff] text-white'
+              : 'bg-white text-gray-600 hover:bg-gray-50'
           }`}
         >
           Satellite

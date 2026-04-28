@@ -22,6 +22,18 @@ export const ROLES = {
   KADASTR_AGENCY:      'kadastr_agency',
 } as const satisfies Record<string, UserRole>;
 
+export const DISTRICT_ROLES: UserRole[] = [
+  ROLES.DKP_FILIAL,
+  ROLES.DISTRICT_COMMISSION,
+  ROLES.DISTRICT_HOKIMLIK,
+];
+
+export const REGIONAL_ROLES: UserRole[] = [
+  ROLES.DKP_REGIONAL,
+  ROLES.REGIONAL_COMMISSION,
+  ROLES.REGIONAL_HOKIMLIK,
+];
+
 export type CommissionPosition =
   | 'hokim' | 'hokim_deputy' | 'economics_head' | 'construction_head'
   | 'poverty_head' | 'ecology_head' | 'culture_head' | 'spirituality_head'

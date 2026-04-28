@@ -5,7 +5,8 @@ import type { MapFeatureCollection, MapFeature } from '@/api/map.api';
 
 const TILES = {
   osm: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  satellite: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  satellite:
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
 } as const;
 
 type TileKey = keyof typeof TILES;
@@ -56,7 +57,10 @@ export default function MapView({
     objects: L.LayerGroup | null;
   }>({ regions: null, districts: null, objects: null });
   const [tileKey, setTileKey] = useState<TileKey>('osm');
-  const [hoveredStreet, setHoveredStreet] = useState<{ name: string; objectType: string | null } | null>(null);
+  const [hoveredStreet, setHoveredStreet] = useState<{
+    name: string;
+    objectType: string | null;
+  } | null>(null);
 
   // Init map once
   useEffect(() => {
@@ -69,10 +73,15 @@ export default function MapView({
       attributionControl: false,
     });
 
-    tileLayerRef.current = L.tileLayer(TILES.osm, { attribution: TILE_ATTRIBUTIONS.osm }).addTo(map);
+    tileLayerRef.current = L.tileLayer(TILES.osm, {
+      attribution: TILE_ATTRIBUTIONS.osm,
+    }).addTo(map);
 
     const updateZoomClass = () => {
-      containerRef.current?.classList.toggle('zoom-street-labels', map.getZoom() >= 16);
+      containerRef.current?.classList.toggle(
+        'zoom-street-labels',
+        map.getZoom() >= 16,
+      );
     };
     map.on('zoomend', updateZoomClass);
     updateZoomClass();
@@ -102,10 +111,15 @@ export default function MapView({
       onEachFeature: (feature, lyr) => {
         const f = feature as MapFeature;
         if (!drilled) {
-          lyr.on('mouseover', () => (lyr as L.Path).setStyle(STYLES.regionHover));
+          lyr.on('mouseover', () =>
+            (lyr as L.Path).setStyle(STYLES.regionHover),
+          );
           lyr.on('mouseout', () => (lyr as L.Path).setStyle(STYLES.region));
           lyr.on('click', () => onRegionClick(f));
-          lyr.bindTooltip(f.properties.nameUz ?? '', { sticky: true, className: 'map-tooltip' });
+          lyr.bindTooltip(f.properties.nameUz ?? '', {
+            sticky: true,
+            className: 'map-tooltip',
+          });
         }
       },
     }).addTo(map);
@@ -134,9 +148,7 @@ export default function MapView({
       style: (feature) => {
         const f = feature as MapFeature;
         const isSelected = f.properties.districtDbId === selectedDistrictId;
-        return isSelected
-          ? { ...STYLES.district, weight: 3 }
-          : STYLES.district;
+        return isSelected ? { ...STYLES.district, weight: 3 } : STYLES.district;
       },
       onEachFeature: (feature, lyr) => {
         const f = feature as MapFeature;
@@ -180,21 +192,35 @@ export default function MapView({
     const mfyHoverStyle = { ...STYLES.mfyHover, color: mfyColor };
 
     const data = districtObjects as GeoJSON.FeatureCollection;
-    const mfyData = { ...data, features: data.features.filter((f) => (f as MapFeature).properties.isMfy) };
-    const streetData = { ...data, features: data.features.filter((f) => !(f as MapFeature).properties.isMfy) };
+    const mfyData = {
+      ...data,
+      features: data.features.filter((f) => (f as MapFeature).properties.isMfy),
+    };
+    const streetData = {
+      ...data,
+      features: data.features.filter(
+        (f) => !(f as MapFeature).properties.isMfy,
+      ),
+    };
 
     // MFY layer
     const mfyLayer = L.geoJSON(mfyData as GeoJSON.GeoJsonObject, {
       style: mfyStyle,
       pointToLayer: (_feature, latlng) =>
-        L.circleMarker(latlng, { radius: 5, color: mfyColor, fillOpacity: 0.7 }),
+        L.circleMarker(latlng, {
+          radius: 5,
+          color: mfyColor,
+          fillOpacity: 0.7,
+        }),
       onEachFeature: (feature, lyr) => {
         const f = feature as MapFeature;
         lyr.on('mouseover', () => (lyr as L.Path).setStyle(mfyHoverStyle));
         lyr.on('mouseout', () => (lyr as L.Path).setStyle(mfyStyle));
         if (f.properties.nameUz) {
           lyr.bindTooltip(`${f.properties.nameUz} MFY`, {
-            permanent: true, direction: 'center', className: 'map-label',
+            permanent: true,
+            direction: 'center',
+            className: 'map-label',
           });
         }
       },
@@ -210,8 +236,14 @@ export default function MapView({
         streetVisualMap.set(f.properties.id, lyr as L.Path);
         if (f.properties.nameUz) {
           lyr.bindTooltip(
-            [f.properties.nameUz, f.properties.objectType?.toLowerCase()].filter(Boolean).join(' '),
-            { permanent: true, direction: 'center', className: 'map-street-label' },
+            [f.properties.nameUz, f.properties.objectType?.toLowerCase()]
+              .filter(Boolean)
+              .join(' '),
+            {
+              permanent: true,
+              direction: 'center',
+              className: 'map-street-label',
+            },
           );
         }
       },
@@ -224,8 +256,13 @@ export default function MapView({
         const f = feature as MapFeature;
         const id = f.properties.id as number;
         lyr.on('mouseover', () => {
-          streetVisualMap.get(id)?.setStyle({ ...STYLES.street, weight: 4, opacity: 1 });
-          setHoveredStreet({ name: f.properties.nameUz ?? '', objectType: f.properties.objectType ?? null });
+          streetVisualMap
+            .get(id)
+            ?.setStyle({ ...STYLES.street, weight: 4, opacity: 1 });
+          setHoveredStreet({
+            name: f.properties.nameUz ?? '',
+            objectType: f.properties.objectType ?? null,
+          });
         });
         lyr.on('mouseout', () => {
           streetVisualMap.get(id)?.setStyle(STYLES.street);
@@ -240,7 +277,8 @@ export default function MapView({
     layersRef.current.objects = group;
 
     const bounds = mfyLayer.getBounds().extend(streetVisual.getBounds());
-    if (bounds.isValid()) map.fitBounds(bounds, { padding: [16, 16], maxZoom: 14 });
+    if (bounds.isValid())
+      map.fitBounds(bounds, { padding: [16, 16], maxZoom: 14 });
   }, [districtObjects, selectedDistrictId, tileKey]);
 
   // Tile layer switch
@@ -250,7 +288,9 @@ export default function MapView({
     if (tileLayerRef.current) {
       map.removeLayer(tileLayerRef.current);
     }
-    const options: L.TileLayerOptions = { attribution: TILE_ATTRIBUTIONS[tileKey] };
+    const options: L.TileLayerOptions = {
+      attribution: TILE_ATTRIBUTIONS[tileKey],
+    };
     if (tileKey === 'satellite') options.maxNativeZoom = 17;
     tileLayerRef.current = L.tileLayer(TILES[tileKey], options).addTo(map);
     tileLayerRef.current.bringToBack();
@@ -262,8 +302,14 @@ export default function MapView({
     if (!map) return;
 
     if (selectedRegionId === null) {
-      if (layersRef.current.districts) { map.removeLayer(layersRef.current.districts); layersRef.current.districts = null; }
-      if (layersRef.current.objects) { map.removeLayer(layersRef.current.objects); layersRef.current.objects = null; }
+      if (layersRef.current.districts) {
+        map.removeLayer(layersRef.current.districts);
+        layersRef.current.districts = null;
+      }
+      if (layersRef.current.objects) {
+        map.removeLayer(layersRef.current.objects);
+        layersRef.current.objects = null;
+      }
     }
     if (selectedDistrictId === null && layersRef.current.objects) {
       map.removeLayer(layersRef.current.objects);
@@ -272,23 +318,23 @@ export default function MapView({
   }, [selectedRegionId, selectedDistrictId]);
 
   return (
-    <div className="relative w-full h-full" style={{ minHeight: 0 }}>
-      <div ref={containerRef} className="w-full h-full" />
+    <div className='relative w-full h-full' style={{ minHeight: 0 }}>
+      <div ref={containerRef} className='w-full h-full' />
 
       {/* Street hover info */}
       {hoveredStreet && (
-        <div className="absolute top-3 right-3 z-[1000] bg-white/95 backdrop-blur-sm rounded-xl shadow-md border border-gray-100 px-4 py-3 pointer-events-none min-w-40">
-          <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wider mb-1">
+        <div className='absolute top-3 right-3 z-[1000] bg-white/95 backdrop-blur-sm rounded-xl shadow-md border border-gray-100 px-4 py-3 pointer-events-none min-w-40'>
+          <p className='text-[11px] text-gray-400 font-medium uppercase tracking-wider mb-1'>
             {hoveredStreet.objectType ?? "Ko'cha"}
           </p>
-          <p className="text-sm font-semibold text-[#0f1f3d] leading-tight">
+          <p className='text-sm font-semibold text-[#0f1f3d] leading-tight'>
             {hoveredStreet.name}
           </p>
         </div>
       )}
 
       {/* Tile switcher */}
-      <div className="absolute bottom-6 right-3 z-[1000] flex rounded-lg overflow-hidden shadow border border-gray-200 text-xs font-medium">
+      <div className='absolute bottom-6 right-3 z-[1000] flex rounded-lg overflow-hidden shadow border border-gray-200 text-xs font-medium'>
         <button
           onClick={() => setTileKey('osm')}
           className={`px-3 py-1.5 cursor-pointer transition-colors ${

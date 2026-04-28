@@ -15,6 +15,7 @@ import { useApplications } from '@/hooks/applications/useApplications';
 import { useRegions, useDistricts } from '@/hooks/locations/useLocations';
 import { useAuthStore } from '@/store/authStore';
 import { STATUS_LABELS, STATUS_COLORS } from '@/constants';
+import { ROLES, REGIONAL_ROLES } from '@/types/user';
 import type { Application, ApplicationStatus } from '@/types';
 
 const { Title } = Typography;
@@ -77,12 +78,6 @@ const columns: TableProps<Application>['columns'] = [
   },
 ];
 
-const REGIONAL_ROLES = [
-  'dkp_regional',
-  'regional_commission',
-  'regional_hokimlik',
-];
-
 export default function ApplicationsPage() {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
@@ -96,8 +91,8 @@ export default function ApplicationsPage() {
   const [regionId, setRegionId] = useState<number | undefined>(undefined);
   const [districtId, setDistrictId] = useState<number | undefined>(undefined);
 
-  const isAdmin = user?.role === 'admin';
-  const isRegional = REGIONAL_ROLES.includes(user?.role ?? '');
+  const isAdmin = user?.role === ROLES.ADMIN;
+  const isRegional = REGIONAL_ROLES.includes(user?.role ?? ('' as never));
 
   // Admin sees region select; regional roles see district select within their region
   const { data: regions } = useRegions();
@@ -120,7 +115,7 @@ export default function ApplicationsPage() {
         <Title level={4} className='m-0'>
           Arizalar
         </Title>
-        {user?.role === 'dkp_filial' && (
+        {user?.role === ROLES.DKP_FILIAL && (
           <Button
             type='primary'
             icon={<PlusOutlined />}

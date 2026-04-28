@@ -34,7 +34,7 @@ import {
   useAllDistricts,
 } from '@/hooks/locations/useLocations';
 import { ROLE_LABELS } from '@/constants';
-import { COMMISSION_POSITION_LABELS } from '@/types/user';
+import { ROLES, DISTRICT_ROLES, REGIONAL_ROLES, COMMISSION_POSITION_LABELS } from '@/types/user';
 import type { User, UserRole } from '@/types';
 import { useAuthStore } from '@/store/authStore';
 
@@ -44,16 +44,6 @@ const ROLE_OPTIONS = Object.entries(ROLE_LABELS)
   .filter(([key]) => key !== 'admin')
   .map(([value, label]) => ({ value, label }));
 
-const DISTRICT_ROLES: UserRole[] = [
-  'dkp_filial',
-  'district_commission',
-  'district_hokimlik',
-];
-const REGIONAL_ROLES: UserRole[] = [
-  'dkp_regional',
-  'regional_commission',
-  'regional_hokimlik',
-];
 
 type ModalMode = 'create' | 'edit' | 'password';
 

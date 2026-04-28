@@ -34,12 +34,11 @@ import { useAdminCategories } from '@/hooks/admin/useObjectTypes';
 import type { GeographicObject } from '@/types';
 import type { RegistryParams } from '@/api/geographic-objects.api';
 import { useAuthStore } from '@/store/authStore';
+import { ROLES, DISTRICT_ROLES, REGIONAL_ROLES } from '@/types/user';
 
 const { Title, Text } = Typography;
 const DEFAULT_LIMIT = 10;
 
-const DISTRICT_ROLES = ['dkp_filial', 'district_commission', 'district_hokimlik'];
-const REGIONAL_ROLES = ['dkp_regional', 'regional_commission', 'regional_hokimlik'];
 
 function CopyableNumber({ value }: { value: string }) {
   const [copied, setCopied] = useLocalState(false);
@@ -73,9 +72,9 @@ function CopyableNumber({ value }: { value: string }) {
 export default function RegistryPage() {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
-  const isAdmin = user?.role === 'admin';
-  const isDistrictRole = DISTRICT_ROLES.includes(user?.role ?? '');
-  const isRegionalRole = REGIONAL_ROLES.includes(user?.role ?? '');
+  const isAdmin = user?.role === ROLES.ADMIN;
+  const isDistrictRole = DISTRICT_ROLES.includes(user?.role ?? ('' as never));
+  const isRegionalRole = REGIONAL_ROLES.includes(user?.role ?? ('' as never));
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Derive filters from URL
