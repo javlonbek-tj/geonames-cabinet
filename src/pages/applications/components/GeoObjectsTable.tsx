@@ -1,7 +1,19 @@
 import { useState } from 'react';
-import { Table, Tag, Button, Input, Alert, Card, Modal, Typography } from 'antd';
+import {
+  Table,
+  Tag,
+  Button,
+  Input,
+  Alert,
+  Card,
+  Modal,
+  Typography,
+} from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
-import { useApplicationFlags, useToggleGeoFlag } from '@/hooks/geo-flags/useGeoFlags';
+import {
+  useApplicationFlags,
+  useToggleGeoFlag,
+} from '@/hooks/geo-flags/useGeoFlags';
 import type { GeographicObject } from '@/types';
 import type { useNameEdits } from '../hooks/useNameEdits';
 
@@ -29,15 +41,24 @@ export default function GeoObjectsTable({
   onActiveChange,
   nameEdits,
 }: Props) {
-  const { getEdit, updateNameUz, updateNameKrill, handleSaveNames, isSavingNames } = nameEdits;
+  const {
+    getEdit,
+    updateNameUz,
+    updateNameKrill,
+    handleSaveNames,
+    isSavingNames,
+  } = nameEdits;
 
-  const [flagModal, setFlagModal] = useState<{ geoObjectId: number } | null>(null);
+  const [flagModal, setFlagModal] = useState<{ geoObjectId: number } | null>(
+    null,
+  );
   const [flagComment, setFlagComment] = useState('');
 
   const { data: geoFlags = [] } = useApplicationFlags(
     isKadastrFlagStep || canViewFlags ? appId : 0,
   );
-  const { mutate: toggleFlag, isPending: isTogglingFlag } = useToggleGeoFlag(appId);
+  const { mutate: toggleFlag, isPending: isTogglingFlag } =
+    useToggleGeoFlag(appId);
 
   const columns = [
     {
@@ -62,7 +83,11 @@ export default function GeoObjectsTable({
             />
           );
         }
-        return geo.nameUz ? <Text>{geo.nameUz}</Text> : <Text type='secondary'>Nomsiz</Text>;
+        return geo.nameUz ? (
+          <Text>{geo.nameUz}</Text>
+        ) : (
+          <Text type='secondary'>Nomsiz</Text>
+        );
       },
     },
     ...(canEnterNames
@@ -87,9 +112,19 @@ export default function GeoObjectsTable({
       key: 'objectTypeId',
       render: (geo: GeographicObject) => {
         if (canEnterNames) {
-          return <Input size='small' disabled value={geo.objectType?.nameUz ?? '—'} />;
+          return (
+            <Input
+              size='small'
+              disabled
+              value={geo.objectType?.nameUz ?? '—'}
+            />
+          );
         }
-        return geo.objectType?.nameUz ? <Text>{geo.objectType.nameUz}</Text> : <Text type='secondary'>—</Text>;
+        return geo.objectType?.nameUz ? (
+          <Text>{geo.objectType.nameUz}</Text>
+        ) : (
+          <Text type='secondary'>—</Text>
+        );
       },
     },
     {
@@ -98,7 +133,9 @@ export default function GeoObjectsTable({
       key: 'existsInRegistry',
       width: 90,
       render: (v: boolean | null) =>
-        v == null ? '—' : (
+        v == null ? (
+          '—'
+        ) : (
           <Tag color={v ? 'green' : 'orange'}>{v ? 'Mavjud' : 'Yangi'}</Tag>
         ),
     },
@@ -111,7 +148,11 @@ export default function GeoObjectsTable({
             render: (geo: GeographicObject) => {
               const flag = geoFlags.find((f) => f.geoObjectId === geo.id);
               if (canViewFlags) {
-                return flag ? <Tag color='red'>Nomuvofiq</Tag> : <Tag color='green'>Muvofiq</Tag>;
+                return flag ? (
+                  <Tag color='red'>Nomuvofiq</Tag>
+                ) : (
+                  <Tag color='green'>Muvofiq</Tag>
+                );
               }
               return (
                 <Button
@@ -161,7 +202,7 @@ export default function GeoObjectsTable({
             type='info'
             showIcon
             className='mb-3'
-            message='Xaritadagi joylashuvga qarab har bir obyektga nom bering'
+            title='Xaritadagi joylashuvga qarab har bir obyektga nom bering'
           />
         )}
         <Table
@@ -191,7 +232,10 @@ export default function GeoObjectsTable({
         onOk={() => {
           if (!flagModal) return;
           toggleFlag(
-            { geoObjectId: flagModal.geoObjectId, comment: flagComment.trim() || undefined },
+            {
+              geoObjectId: flagModal.geoObjectId,
+              comment: flagComment.trim() || undefined,
+            },
             { onSuccess: () => setFlagModal(null) },
           );
         }}

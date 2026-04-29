@@ -1,5 +1,14 @@
 import { useState } from 'react';
-import { Card, Button, Alert, Space, Tag, Typography, Modal, Input } from 'antd';
+import {
+  Card,
+  Button,
+  Alert,
+  Space,
+  Tag,
+  Typography,
+  Modal,
+  Input,
+} from 'antd';
 import {
   useCommissionApprovals,
   useApproveAsCommission,
@@ -8,7 +17,10 @@ import {
 } from '@/hooks/commission/useCommission';
 import { useAuthStore } from '@/store/authStore';
 import { ROLES } from '@/types/user';
-import { COMMISSION_POSITION_LABELS, type CommissionPosition } from '@/types/user';
+import {
+  COMMISSION_POSITION_LABELS,
+  type CommissionPosition,
+} from '@/types/user';
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -58,29 +70,51 @@ export default function CommissionPanel({ appId, isCommissionStep }: Props) {
           <div className='mb-3 p-2 bg-gray-50 rounded flex items-center gap-2 flex-wrap'>
             <Text className='text-sm flex-1'>
               <strong>
-                {COMMISSION_POSITION_LABELS[user.position as CommissionPosition]}
+                {
+                  COMMISSION_POSITION_LABELS[
+                    user.position as CommissionPosition
+                  ]
+                }
               </strong>
               {' — '}
-              {!myApproval && <span className='text-gray-400'>Qaror kutilmoqda</span>}
-              {myApproval?.approved && <span className='text-green-600'>Kelishildi ✓</span>}
-              {myApproval && !myApproval.approved && <span className='text-red-500'>Rad etildi</span>}
+              {!myApproval && (
+                <span className='text-gray-400'>Qaror kutilmoqda</span>
+              )}
+              {myApproval?.approved && (
+                <span className='text-green-600'>Kelishildi ✓</span>
+              )}
+              {myApproval && !myApproval.approved && (
+                <span className='text-red-500'>Rad etildi</span>
+              )}
             </Text>
             {!myApproval && (
               <Space size={6}>
-                <Button type='primary' size='small' loading={isApproving} onClick={() => approveAsCommission()}>
+                <Button
+                  type='primary'
+                  size='small'
+                  loading={isApproving}
+                  onClick={() => approveAsCommission()}
+                >
                   Kelishdim
                 </Button>
                 <Button
                   danger
                   size='small'
-                  onClick={() => { setRejectComment(''); setRejectModal(true); }}
+                  onClick={() => {
+                    setRejectComment('');
+                    setRejectModal(true);
+                  }}
                 >
                   Rad etish
                 </Button>
               </Space>
             )}
             {myApproval && (
-              <Button size='small' loading={isRevoking} onClick={() => revokeApproval()}>
+              <Button
+                size='small'
+                loading={isRevoking}
+                onClick={() => revokeApproval()}
+              >
                 Kelishuvni bekor qilish
               </Button>
             )}
@@ -88,8 +122,12 @@ export default function CommissionPanel({ appId, isCommissionStep }: Props) {
         )}
 
         <div className='flex flex-col'>
-          {(Object.keys(COMMISSION_POSITION_LABELS) as CommissionPosition[]).map((pos) => {
-            const approval = commissionApprovals.find((a) => a.position === pos);
+          {(
+            Object.keys(COMMISSION_POSITION_LABELS) as CommissionPosition[]
+          ).map((pos) => {
+            const approval = commissionApprovals.find(
+              (a) => a.position === pos,
+            );
             return (
               <div
                 key={pos}
@@ -98,11 +136,17 @@ export default function CommissionPanel({ appId, isCommissionStep }: Props) {
                 <Space size={6} align='start'>
                   <span
                     className={`inline-block w-2 h-2 rounded-full mt-1.5 shrink-0 ${
-                      !approval ? 'bg-gray-300' : approval.approved ? 'bg-green-500' : 'bg-red-400'
+                      !approval
+                        ? 'bg-gray-300'
+                        : approval.approved
+                          ? 'bg-green-500'
+                          : 'bg-red-400'
                     }`}
                   />
                   <div>
-                    <Text className='text-sm'>{COMMISSION_POSITION_LABELS[pos]}</Text>
+                    <Text className='text-sm'>
+                      {COMMISSION_POSITION_LABELS[pos]}
+                    </Text>
                     {approval && !approval.approved && approval.comment && (
                       <Text type='secondary' className='text-xs block italic'>
                         &ldquo;{approval.comment}&rdquo;
@@ -126,7 +170,9 @@ export default function CommissionPanel({ appId, isCommissionStep }: Props) {
           <Text type='secondary' className='text-xs'>
             {approvedCount} / {total} ta kelishdi
           </Text>
-          {approvedCount === total && <Tag color='green'>Barchasi kelishdi</Tag>}
+          {approvedCount === total && (
+            <Tag color='green'>Barchasi kelishdi</Tag>
+          )}
         </div>
       </Card>
 
@@ -140,7 +186,10 @@ export default function CommissionPanel({ appId, isCommissionStep }: Props) {
         onOk={() => {
           if (!rejectComment.trim()) return;
           rejectCommission(rejectComment, {
-            onSuccess: () => { setRejectModal(false); setRejectComment(''); },
+            onSuccess: () => {
+              setRejectModal(false);
+              setRejectComment('');
+            },
           });
         }}
         centered

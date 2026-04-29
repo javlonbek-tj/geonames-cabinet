@@ -23,21 +23,29 @@ export default function ApplicationActions({
   hasUnsavedEdits,
   allNamed,
 }: Props) {
-  const [modal, setModal] = useState<{ action: string; label: string } | null>(null);
+  const [modal, setModal] = useState<{ action: string; label: string } | null>(
+    null,
+  );
   const [comment, setComment] = useState('');
-  const { mutate: performAction, isPending: isActing } = usePerformAction(appId);
+  const { mutate: performAction, isPending: isActing } =
+    usePerformAction(appId);
 
   const blockMessage = needsDocumentUpload
-    ? "Yakunlash uchun avval Kengash qarorining PDF nusxasini yuklang"
+    ? 'Yakunlash uchun avval Kengash qarorining PDF nusxasini yuklang'
     : hasUnsavedEdits && allNamed
       ? "Nomlarni saqlang, so'ng yuborishingiz mumkin"
-      : "Barcha obyektlarga lotin va kirill nomlar berilib, saqlangunga qadar yuborish mumkin emas";
+      : 'Barcha obyektlarga lotin va kirill nomlar berilib, saqlangunga qadar yuborish mumkin emas';
 
   const handleAction = () => {
     if (!modal) return;
     performAction(
       { action: modal.action, comment: comment.trim() || undefined },
-      { onSuccess: () => { setModal(null); setComment(''); } },
+      {
+        onSuccess: () => {
+          setModal(null);
+          setComment('');
+        },
+      },
     );
   };
 
@@ -45,7 +53,12 @@ export default function ApplicationActions({
     <>
       <Card title='Harakatlar' size='small'>
         {actionsBlocked && (
-          <Alert type='warning' showIcon className='mb-3' message={blockMessage} />
+          <Alert
+            type='warning'
+            showIcon
+            className='mb-3'
+            title={blockMessage}
+          />
         )}
         <div className='flex flex-col gap-2'>
           {actions.map((a) => (
@@ -66,7 +79,10 @@ export default function ApplicationActions({
       <Modal
         open={!!modal}
         title={modal?.label}
-        onCancel={() => { setModal(null); setComment(''); }}
+        onCancel={() => {
+          setModal(null);
+          setComment('');
+        }}
         onOk={handleAction}
         confirmLoading={isActing}
         okText='Tasdiqlash'

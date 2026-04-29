@@ -1,5 +1,23 @@
 import type { ApplicationStatus } from '@/types';
 
+export const APP_STATUS = {
+  GEOMETRY_UPLOADED:       'step_1_geometry_uploaded',
+  DKP_REGIONAL:            'step_1_1_dkp_regional',
+  DKP_COORDINATION:        'step_1_2_dkp_coordination',
+  DISTRICT_HOKIMLIK:       'step_2_district_hokimlik',
+  PUBLIC_DISCUSSION:       'step_2_public_discussion',
+  DISTRICT_COMMISSION:     'step_2_1_district_commission',
+  REGIONAL_COMMISSION:     'step_2_2_regional_commission',
+  REGIONAL_HOKIMLIK:       'step_3_regional_hokimlik',
+  KADASTR_AGENCY:          'step_4_kadastr_agency',
+  DKP_CENTRAL:             'step_5_dkp_central',
+  KADASTR_AGENCY_FINAL:    'step_6_kadastr_agency_final',
+  REGIONAL_HOKIMLIK_FINAL: 'step_7_regional_hokimlik',
+  DISTRICT_HOKIMLIK_FINAL: 'step_8_district_hokimlik',
+  COMPLETED:               'completed',
+  REJECTED:                'rejected',
+} as const satisfies Record<string, ApplicationStatus>;
+
 export const ACTION_LABELS: Record<string, string> = {
   submit:   'Yuborildi',
   approve:  'Tasdiqlandi',

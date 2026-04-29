@@ -14,7 +14,10 @@ interface Props {
   isDiscussionStep: boolean;
 }
 
-export default function DiscussionResultsCard({ results, isDiscussionStep }: Props) {
+export default function DiscussionResultsCard({
+  results,
+  isDiscussionStep,
+}: Props) {
   const daysLeft = Math.max(
     0,
     Math.ceil((new Date(results.endsAt).getTime() - Date.now()) / 86400000),

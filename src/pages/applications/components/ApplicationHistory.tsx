@@ -3,6 +3,7 @@ import { ClockCircleOutlined } from '@ant-design/icons';
 import {
   STATUS_LABELS,
   STATUS_HOLDER,
+  APP_STATUS,
   ACTION_LABELS,
   ACTION_COLORS,
   ROLE_LABELS,
@@ -18,7 +19,8 @@ interface Props {
 
 export default function ApplicationHistory({ history, currentStatus }: Props) {
   const isFinished =
-    currentStatus === 'completed' || currentStatus === 'rejected';
+    currentStatus === APP_STATUS.COMPLETED ||
+    currentStatus === APP_STATUS.REJECTED;
   return (
     <Card title='Harakatlar tarixi' size='small'>
       {history.length > 0 || currentStatus ? (

@@ -6,7 +6,10 @@ import {
   FilePdfOutlined,
   FileImageOutlined,
 } from '@ant-design/icons';
-import { useUploadDocument, useDeleteDocument } from '@/hooks/uploads/useDocuments';
+import {
+  useUploadDocument,
+  useDeleteDocument,
+} from '@/hooks/uploads/useDocuments';
 import type { Document } from '@/types';
 
 interface Props {
@@ -16,8 +19,14 @@ interface Props {
   userId: number | undefined;
 }
 
-export default function DocumentsCard({ appId, documents, canModify, userId }: Props) {
-  const { mutate: uploadDoc, isPending: isUploading } = useUploadDocument(appId);
+export default function DocumentsCard({
+  appId,
+  documents,
+  canModify,
+  userId,
+}: Props) {
+  const { mutate: uploadDoc, isPending: isUploading } =
+    useUploadDocument(appId);
   const { mutate: deleteDoc } = useDeleteDocument(appId);
 
   return (
@@ -29,9 +38,16 @@ export default function DocumentsCard({ appId, documents, canModify, userId }: P
           <Upload
             showUploadList={false}
             accept='.pdf,.png,.jpg,.jpeg'
-            beforeUpload={(file) => { uploadDoc({ file }); return false; }}
+            beforeUpload={(file) => {
+              uploadDoc({ file });
+              return false;
+            }}
           >
-            <Button size='small' icon={<UploadOutlined />} loading={isUploading}>
+            <Button
+              size='small'
+              icon={<UploadOutlined />}
+              loading={isUploading}
+            >
               Yuklash
             </Button>
           </Upload>
@@ -51,7 +67,10 @@ export default function DocumentsCard({ appId, documents, canModify, userId }: P
                 <FileOutlined className='text-blue-500 shrink-0' />
               );
             return (
-              <div key={doc.id} className='flex items-center justify-between gap-2'>
+              <div
+                key={doc.id}
+                className='flex items-center justify-between gap-2'
+              >
                 <Space size={4} className='min-w-0'>
                   {icon}
                   <a
@@ -71,7 +90,12 @@ export default function DocumentsCard({ appId, documents, canModify, userId }: P
                     okText='Ha'
                     cancelText="Yo'q"
                   >
-                    <Button type='text' danger size='small' icon={<DeleteOutlined />} />
+                    <Button
+                      type='text'
+                      danger
+                      size='small'
+                      icon={<DeleteOutlined />}
+                    />
                   </Popconfirm>
                 )}
               </div>
@@ -79,7 +103,10 @@ export default function DocumentsCard({ appId, documents, canModify, userId }: P
           })}
         </div>
       ) : (
-        <Empty description='Hujjat yuklanmagan' image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty
+          description='Hujjat yuklanmagan'
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+        />
       )}
     </Card>
   );

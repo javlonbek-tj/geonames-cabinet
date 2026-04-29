@@ -16,7 +16,7 @@ import { useDocuments } from '@/hooks/uploads/useDocuments';
 import { useDiscussionResults } from '@/hooks/public/usePublicDiscussion';
 import { useAuthStore } from '@/store/authStore';
 import { ROLES } from '@/types/user';
-import { STATUS_LABELS, STATUS_COLORS } from '@/constants';
+import { STATUS_LABELS, STATUS_COLORS, APP_STATUS } from '@/constants';
 import { buildFeatureCollection, extractRawGeometry } from '@/lib/geoUtils';
 import { useNameEdits } from './hooks/useNameEdits';
 import ApplicationInfoCard from './components/ApplicationInfoCard';
@@ -31,22 +31,22 @@ import type { ApplicationStatus, GeoJSON } from '@/types';
 const { Title } = Typography;
 
 const DISCUSSION_VISIBLE_STATUSES: ApplicationStatus[] = [
-  'step_2_1_district_commission',
-  'step_2_2_regional_commission',
-  'step_3_regional_hokimlik',
-  'step_4_kadastr_agency',
-  'step_5_dkp_central',
-  'step_6_kadastr_agency_final',
-  'step_7_regional_hokimlik',
-  'step_8_district_hokimlik',
-  'completed',
+  APP_STATUS.DISTRICT_COMMISSION,
+  APP_STATUS.REGIONAL_COMMISSION,
+  APP_STATUS.REGIONAL_HOKIMLIK,
+  APP_STATUS.KADASTR_AGENCY,
+  APP_STATUS.DKP_CENTRAL,
+  APP_STATUS.KADASTR_AGENCY_FINAL,
+  APP_STATUS.REGIONAL_HOKIMLIK_FINAL,
+  APP_STATUS.DISTRICT_HOKIMLIK_FINAL,
+  APP_STATUS.COMPLETED,
 ];
 
 const FLAG_VISIBLE_STATUSES: ApplicationStatus[] = [
-  'step_6_kadastr_agency_final',
-  'step_7_regional_hokimlik',
-  'step_8_district_hokimlik',
-  'completed',
+  APP_STATUS.KADASTR_AGENCY_FINAL,
+  APP_STATUS.REGIONAL_HOKIMLIK_FINAL,
+  APP_STATUS.DISTRICT_HOKIMLIK_FINAL,
+  APP_STATUS.COMPLETED,
 ];
 
 export default function ApplicationDetailPage() {
@@ -65,9 +65,8 @@ export default function ApplicationDetailPage() {
   const [activeGeoIdx, setActiveGeoIdx] = useState<number | null>(null);
   const [mapFullscreen, setMapFullscreen] = useState(false);
 
-  const isCommissionStep =
-    app?.currentStatus === 'step_2_1_district_commission';
-  const isDiscussionStep = app?.currentStatus === 'step_2_public_discussion';
+  const isCommissionStep = app?.currentStatus === APP_STATUS.DISTRICT_COMMISSION;
+  const isDiscussionStep = app?.currentStatus === APP_STATUS.PUBLIC_DISCUSSION;
   const hasDiscussion =
     isDiscussionStep ||
     (!!app?.currentStatus &&
@@ -79,7 +78,7 @@ export default function ApplicationDetailPage() {
   );
 
   const isKadastrFlagStep =
-    app?.currentStatus === 'step_5_dkp_central' &&
+    app?.currentStatus === APP_STATUS.DKP_CENTRAL &&
     user?.role === ROLES.DKP_CENTRAL;
   const canViewFlags =
     !isKadastrFlagStep &&
@@ -88,12 +87,12 @@ export default function ApplicationDetailPage() {
 
   const canEnterNames =
     user?.role === ROLES.DISTRICT_HOKIMLIK &&
-    app?.currentStatus === 'step_2_district_hokimlik' &&
+    app?.currentStatus === APP_STATUS.DISTRICT_HOKIMLIK &&
     geoObjects.some((o) => o.existsInRegistry === false);
 
   const needsDocumentUpload =
     user?.role === ROLES.DISTRICT_HOKIMLIK &&
-    app?.currentStatus === 'step_8_district_hokimlik' &&
+    app?.currentStatus === APP_STATUS.DISTRICT_HOKIMLIK_FINAL &&
     !documents.some((d) => d.uploader?.id === user?.id);
 
   const actionsBlocked =
