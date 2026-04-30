@@ -21,6 +21,5 @@ export const commissionApi = {
     ),
   reject: (applicationId: number, comment: string) =>
     api.post(`/commission/${applicationId}/reject`, { comment }),
-  revoke: (applicationId: number) =>
-    api.delete(`/commission/${applicationId}`),
+  revoke: (applicationId: number) => api.delete(`/commission/${applicationId}`),
 };

@@ -1,29 +1,15 @@
 import { useState } from 'react';
-import {
-  Table,
-  Tag,
-  Select,
-  Input,
-  Typography,
-  Button,
-  Card,
-  type TableProps,
-} from 'antd';
+import { Table, Tag, Typography, Button, Card, type TableProps } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import { useApplications } from '@/hooks/applications/useApplications';
-import { useRegions, useDistricts } from '@/hooks/locations/useLocations';
 import { useAuthStore } from '@/store/authStore';
 import { STATUS_LABELS, STATUS_COLORS } from '@/constants';
 import { ROLES, REGIONAL_ROLES } from '@/types/user';
 import type { Application, ApplicationStatus } from '@/types';
+import ApplicationFilters from './components/ApplicationFilters';
 
 const { Title } = Typography;
-
-const STATUS_OPTIONS = Object.entries(STATUS_LABELS).map(([value, label]) => ({
-  value,
-  label,
-}));
 
 const columns: TableProps<Application>['columns'] = [
   {
@@ -94,13 +80,7 @@ export default function ApplicationsPage() {
   const isAdmin = user?.role === ROLES.ADMIN;
   const isRegional = REGIONAL_ROLES.includes(user?.role ?? ('' as never));
 
-  // Admin sees region select; regional roles see district select within their region
-  const { data: regions } = useRegions();
-  const { data: districts } = useDistricts(
-    isAdmin ? regionId : (user?.regionId ?? undefined),
-  );
-
-  const { data, isLoading } = useApplications({
+  const { data, isFetching } = useApplications({
     page,
     limit,
     status,
@@ -126,73 +106,28 @@ export default function ApplicationsPage() {
         )}
       </div>
 
-      {/* Filters */}
-      <div className='flex flex-wrap items-center gap-2'>
-        <Input.Search
-          placeholder='Ariza raqami'
-          allowClear
-          value={applicationNumberInput}
-          onChange={(e) => setApplicationNumberInput(e.target.value)}
-          onSearch={(val) => {
-            setApplicationNumber(val || undefined);
-            setPage(1);
-          }}
-          onClear={() => {
-            setApplicationNumberInput('');
-            setApplicationNumber(undefined);
-          }}
-          style={{ width: 220 }}
-        />
-
-        <Select
-          allowClear
-          placeholder="Holat bo'yicha"
-          options={STATUS_OPTIONS}
-          value={status}
-          onChange={(val) => {
-            setStatus(val);
-            setPage(1);
-          }}
-          style={{ width: 260 }}
-        />
-
-        {isAdmin && (
-          <Select
-            allowClear
-            placeholder='Viloyat'
-            options={regions?.map((r) => ({ value: r.id, label: r.nameUz }))}
-            value={regionId}
-            onChange={(val) => {
-              setRegionId(val);
-              setDistrictId(undefined);
-              setPage(1);
-            }}
-            style={{ width: 200 }}
-          />
-        )}
-
-        {(isAdmin || isRegional) && (
-          <Select
-            allowClear
-            placeholder='Tuman'
-            options={districts?.map((d) => ({ value: d.id, label: d.nameUz }))}
-            value={districtId}
-            onChange={(val) => {
-              setDistrictId(val);
-              setPage(1);
-            }}
-            disabled={isAdmin && !regionId}
-            style={{ width: 200 }}
-          />
-        )}
-      </div>
+      <ApplicationFilters
+        applicationNumberInput={applicationNumberInput}
+        setApplicationNumberInput={setApplicationNumberInput}
+        setApplicationNumber={setApplicationNumber}
+        status={status}
+        setStatus={setStatus}
+        regionId={regionId}
+        setRegionId={setRegionId}
+        districtId={districtId}
+        setDistrictId={setDistrictId}
+        setPage={setPage}
+        isAdmin={isAdmin}
+        isRegional={isRegional}
+        userRegionId={user?.regionId ?? undefined}
+      />
 
       <Card size='small' styles={{ body: { padding: 0 } }}>
         <Table
           rowKey='id'
           columns={columns}
-          dataSource={data?.data}
-          loading={isLoading}
+          dataSource={data?.data ?? []}
+          loading={isFetching}
           size='small'
           bordered
           onRow={(record) => ({

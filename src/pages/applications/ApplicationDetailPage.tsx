@@ -17,7 +17,10 @@ import { useDiscussionResults } from '@/hooks/public/usePublicDiscussion';
 import { useAuthStore } from '@/store/authStore';
 import { ROLES } from '@/types/user';
 import { STATUS_LABELS, STATUS_COLORS, APP_STATUS } from '@/constants';
-import { buildFeatureCollection, extractRawGeometry } from '@/lib/geoUtils';
+import {
+  buildFeatureCollection,
+  downloadApplicationGeoJson,
+} from '@/lib/geoUtils';
 import { useNameEdits } from './hooks/useNameEdits';
 import ApplicationInfoCard from './components/ApplicationInfoCard';
 import GeoObjectsTable from './components/GeoObjectsTable';
@@ -26,7 +29,7 @@ import DiscussionResultsCard from './components/DiscussionResultsCard';
 import CommissionPanel from './components/CommissionPanel';
 import ApplicationActions from './components/ApplicationActions';
 import DocumentsCard from './components/DocumentsCard';
-import type { ApplicationStatus, GeoJSON } from '@/types';
+import type { ApplicationStatus } from '@/types';
 
 const { Title } = Typography;
 
@@ -65,7 +68,8 @@ export default function ApplicationDetailPage() {
   const [activeGeoIdx, setActiveGeoIdx] = useState<number | null>(null);
   const [mapFullscreen, setMapFullscreen] = useState(false);
 
-  const isCommissionStep = app?.currentStatus === APP_STATUS.DISTRICT_COMMISSION;
+  const isCommissionStep =
+    app?.currentStatus === APP_STATUS.DISTRICT_COMMISSION;
   const isDiscussionStep = app?.currentStatus === APP_STATUS.PUBLIC_DISCUSSION;
   const hasDiscussion =
     isDiscussionStep ||
@@ -106,37 +110,6 @@ export default function ApplicationDetailPage() {
     () => buildFeatureCollection(geoObjects),
     [geoObjects],
   );
-
-  const handleDownloadGeoJson = () => {
-    if (!app) return;
-    const features = geoObjects
-      .filter((o) => o.geometry)
-      .map((o) => ({
-        type: 'Feature',
-        properties: {
-          id: o.id,
-          name_uz: o.nameUz ?? null,
-          name_krill: o.nameKrill ?? null,
-          object_type_id: o.objectTypeId ?? null,
-          object_type: o.objectType?.nameUz ?? null,
-          registry_number: o.registryNumber ?? null,
-          exists_in_registry: o.existsInRegistry,
-          region: o.region?.nameUz ?? null,
-          district: o.district?.nameUz ?? null,
-        },
-        geometry: extractRawGeometry(o.geometry as GeoJSON),
-      }));
-    const blob = new Blob(
-      [JSON.stringify({ type: 'FeatureCollection', features }, null, 2)],
-      { type: 'application/geo+json' },
-    );
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${app.applicationNumber}.geojson`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
 
   if (isLoading) {
     return (
@@ -191,7 +164,12 @@ export default function ApplicationDetailPage() {
                     <Button
                       size='small'
                       icon={<DownloadOutlined />}
-                      onClick={handleDownloadGeoJson}
+                      onClick={() =>
+                        downloadApplicationGeoJson(
+                          app.applicationNumber,
+                          geoObjects,
+                        )
+                      }
                     >
                       GeoJSON yuklab olish
                     </Button>

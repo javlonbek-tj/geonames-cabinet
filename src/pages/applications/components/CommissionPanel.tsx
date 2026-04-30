@@ -62,7 +62,7 @@ export default function CommissionPanel({ appId, isCommissionStep }: Props) {
             type='warning'
             showIcon
             className='mb-3'
-            message="Sizning lavozimingiz belgilanmagan. Administrator bilan bog'laning."
+            title="Sizning lavozimingiz belgilanmagan. Administrator bilan bog'laning."
           />
         )}
 

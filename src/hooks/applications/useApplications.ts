@@ -12,5 +12,6 @@ export function useApplications(params: ApplicationsParams = {}) {
   return useQuery({
     queryKey: applicationKeys.list(params),
     queryFn: () => applicationsApi.getAll(params).then((res) => res.data),
+    placeholderData: (prev) => prev,
   });
 }

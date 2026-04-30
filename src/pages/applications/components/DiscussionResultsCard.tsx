@@ -18,10 +18,6 @@ export default function DiscussionResultsCard({
   results,
   isDiscussionStep,
 }: Props) {
-  const daysLeft = Math.max(
-    0,
-    Math.ceil((new Date(results.endsAt).getTime() - Date.now()) / 86400000),
-  );
   return (
     <Card title='Ommaviy muhokama natijalari' size='small'>
       <div className='flex flex-col gap-2'>
@@ -42,7 +38,7 @@ export default function DiscussionResultsCard({
             type='info'
             showIcon
             className='mt-1'
-            message={`Muhokama davom etmoqda. ${daysLeft} kun qoldi.`}
+            title='Muhokama davom etmoqda.'
           />
         )}
       </div>
