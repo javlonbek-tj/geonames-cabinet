@@ -7,6 +7,14 @@
     <title>Geonomlar</title>
   </head>
   <body>
+    <script>
+      try {
+        const s = localStorage.getItem('theme');
+        if (s && JSON.parse(s).state?.isDark) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch {}
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

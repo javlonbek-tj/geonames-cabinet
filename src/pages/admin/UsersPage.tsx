@@ -5,7 +5,9 @@ import { useUsers, useDeleteUser } from '@/hooks/admin/useUsers';
 import { useRegions, useAllDistricts } from '@/hooks/locations/useLocations';
 import type { User } from '@/types';
 import { useAuthStore } from '@/store/authStore';
-import UserModal, { type ModalMode } from './components/UserModal';
+import CreateUserModal from './components/CreateUserModal';
+import EditUserModal from './components/EditUserModal';
+import ResetPasswordModal from './components/ResetPasswordModal';
 import UsersFilters from './components/UsersFilters';
 import { useUsersColumns } from './hooks/useUsersColumns';
 
@@ -19,9 +21,9 @@ export default function UsersPage() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
-  const [modal, setModal] = useState<{ mode: ModalMode; user?: User } | null>(
-    null,
-  );
+  const [createOpen, setCreateOpen] = useState(false);
+  const [editUser, setEditUser] = useState<User | null>(null);
+  const [passwordUser, setPasswordUser] = useState<User | null>(null);
 
   const { data, isFetching } = useUsers({
     page,
@@ -34,16 +36,9 @@ export default function UsersPage() {
   const { data: regions = [] } = useRegions();
   const { data: allDistricts = [] } = useAllDistricts();
 
-  const openCreate = useCallback(() => setModal({ mode: 'create' }), []);
-  const openEdit = useCallback(
-    (user: User) => setModal({ mode: 'edit', user }),
-    [],
-  );
-  const openPassword = useCallback(
-    (user: User) => setModal({ mode: 'password', user }),
-    [],
-  );
-  const closeModal = useCallback(() => setModal(null), []);
+  const openCreate = useCallback(() => setCreateOpen(true), []);
+  const openEdit = useCallback((user: User) => setEditUser(user), []);
+  const openPassword = useCallback((user: User) => setPasswordUser(user), []);
 
   const columns = useUsersColumns({
     page,
@@ -91,7 +86,7 @@ export default function UsersPage() {
             showSizeChanger: true,
             pageSizeOptions: ['10', '20', '50', '100'],
             showTotal: (total) => (
-              <span className='inline-flex items-center gap-1 px-3 py-0.5 rounded text-sm font-medium text-blue-600 bg-blue-50'>
+              <span className='inline-flex items-center gap-1 px-3 py-0.5 rounded text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950'>
                 Jami: {total} ta
               </span>
             ),
@@ -103,7 +98,12 @@ export default function UsersPage() {
         />
       </Card>
 
-      <UserModal modal={modal} onClose={closeModal} />
+      <CreateUserModal open={createOpen} onClose={() => setCreateOpen(false)} />
+      <EditUserModal user={editUser} onClose={() => setEditUser(null)} />
+      <ResetPasswordModal
+        user={passwordUser}
+        onClose={() => setPasswordUser(null)}
+      />
     </div>
   );
 }

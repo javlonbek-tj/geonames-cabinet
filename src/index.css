@@ -1,5 +1,6 @@
 @layer theme, base, antd, components, utilities;
 @import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
 @import 'leaflet/dist/leaflet.css';
 
 @theme {
@@ -23,12 +24,20 @@ body {
   align-items: center;
 }
 
+.dark .registry-table .ant-table-pagination {
+  border-top-color: #303030;
+}
+
 .registry-table .ant-table-pagination .ant-pagination-total-text {
   margin-inline-end: auto !important;
 }
 
 .geo-row-active > td {
   background: #fff7e6 !important;
+}
+
+.dark .geo-row-active > td {
+  background: #2a1a00 !important;
 }
 
 .line-clamp-2 {

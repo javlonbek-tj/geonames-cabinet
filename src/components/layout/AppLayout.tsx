@@ -6,7 +6,10 @@ import {
   UserOutlined,
   LogoutOutlined,
   LockOutlined,
+  SunOutlined,
+  MoonOutlined,
 } from '@ant-design/icons';
+import { useThemeStore } from '@/store/themeStore';
 import { Outlet, useNavigate, useMatches } from 'react-router';
 import { useMutation } from '@tanstack/react-query';
 import Sidebar from './Sidebar';
@@ -22,6 +25,7 @@ export default function AppLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const { user, clearAuth } = useAuthStore();
+  const { isDark, toggle } = useThemeStore();
   const navigate = useNavigate();
 
   const matches = useMatches();
@@ -69,13 +73,20 @@ export default function AppLayout() {
       <Layout
         style={{ marginLeft: siderWidth, transition: 'margin-left 0.2s' }}
       >
-        <Header className='px-0 bg-white flex items-center justify-between pr-4 border-b border-gray-200 sticky top-0 z-100 w-full'>
+        <Header className='px-0 bg-white dark:bg-[#141414] flex items-center justify-between pr-4 border-b border-gray-200 dark:border-[#303030] sticky top-0 z-100 w-full'>
           <Button
             type='text'
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
             className='text-base w-16 h-16'
           />
+          <div className='flex items-center gap-2'>
+            <Button
+              type='text'
+              icon={isDark ? <SunOutlined /> : <MoonOutlined />}
+              onClick={toggle}
+              className='text-base w-10 h-10'
+            />
           <Dropdown
             menu={{ items: dropdownItems }}
             placement='bottomRight'
@@ -93,8 +104,9 @@ export default function AppLayout() {
               <Avatar icon={<UserOutlined />} className='bg-[#1677ff]' />
             </div>
           </Dropdown>
+          </div>
         </Header>
-        <Content className='my-6 mx-4 p-6 min-h-70 bg-white rounded-lg'>
+        <Content className='my-6 mx-4 p-6 min-h-70 bg-white dark:bg-[#141414] rounded-lg'>
           <Outlet />
         </Content>
       </Layout>

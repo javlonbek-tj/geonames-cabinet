@@ -40,10 +40,10 @@ export default function Sidebar({ collapsed }: SidebarProps) {
       collapsible
       collapsed={collapsed}
       width={260}
-      className='bg-white border-r border-gray-200 fixed h-screen overflow-auto left-0 top-0 bottom-0'
+      className='bg-white dark:bg-[#141414] border-r border-gray-200 dark:border-[#303030] fixed h-screen overflow-auto left-0 top-0 bottom-0'
     >
-      <div className='h-16 flex items-center justify-center overflow-hidden border-b border-gray-200'>
-        <span className='text-gray-800 font-bold tracking-widest uppercase text-sm truncate px-4'>
+      <div className='h-16 flex items-center justify-center overflow-hidden border-b border-gray-200 dark:border-[#303030]'>
+        <span className='text-gray-800 dark:text-gray-200 font-bold tracking-widest uppercase text-sm truncate px-4'>
           {collapsed ? 'GN' : 'Geonomlar'}
         </span>
       </div>

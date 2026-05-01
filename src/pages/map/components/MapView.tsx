@@ -323,7 +323,7 @@ export default function MapView({
 
       {/* Street hover info */}
       {hoveredStreet && (
-        <div className='absolute top-3 right-3 z-[1000] bg-white/95 backdrop-blur-sm rounded-xl shadow-md border border-gray-100 px-4 py-3 pointer-events-none min-w-40'>
+        <div className='absolute top-3 right-3 z-1000 bg-white/95 backdrop-blur-sm rounded-xl shadow-md border border-gray-100 px-4 py-3 pointer-events-none min-w-40'>
           <p className='text-[11px] text-gray-400 font-medium uppercase tracking-wider mb-1'>
             {hoveredStreet.objectType ?? "Ko'cha"}
           </p>
@@ -334,7 +334,7 @@ export default function MapView({
       )}
 
       {/* Tile switcher */}
-      <div className='absolute bottom-6 right-3 z-[1000] flex rounded-lg overflow-hidden shadow border border-gray-200 text-xs font-medium'>
+      <div className='absolute bottom-6 right-3 z-1000 flex rounded-lg overflow-hidden shadow border border-gray-200 text-xs font-medium'>
         <button
           onClick={() => setTileKey('osm')}
           className={`px-3 py-1.5 cursor-pointer transition-colors ${

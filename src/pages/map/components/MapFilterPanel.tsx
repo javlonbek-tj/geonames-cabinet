@@ -34,13 +34,13 @@ export default function MapFilterPanel({
   return (
     <div className='flex flex-col gap-4 h-full'>
       <div>
-        <h2 className='text-sm font-bold text-[#0f1f3d] mb-3 uppercase tracking-wider'>
+        <h2 className='text-sm font-bold text-[#0f1f3d] dark:text-gray-200 mb-3 uppercase tracking-wider'>
           Xarita filtri
         </h2>
 
         <div className='flex flex-col gap-3'>
           <div>
-            <label className='text-xs text-gray-500 font-medium mb-1 block'>
+            <label className='text-xs text-gray-500 dark:text-gray-400 font-medium mb-1 block'>
               Viloyat
             </label>
             <Select
@@ -57,7 +57,7 @@ export default function MapFilterPanel({
           </div>
 
           <div>
-            <label className='text-xs text-gray-500 font-medium mb-1 block'>
+            <label className='text-xs text-gray-500 dark:text-gray-400 font-medium mb-1 block'>
               Tuman
             </label>
             <Select
@@ -131,7 +131,7 @@ function StatRow({
   if (count === 0) return null;
   return (
     <div className='flex items-center justify-between'>
-      <span className='flex items-center gap-1.5 text-xs text-gray-600'>
+      <span className='flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400'>
         <span style={{ color }}>{icon}</span>
         {label}
       </span>
