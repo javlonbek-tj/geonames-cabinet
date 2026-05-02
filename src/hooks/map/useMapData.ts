@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { mapApi } from '@/api/map.api';
+import type { RegistryObjectsParams } from '@/api/map.api';
 
 export function useMapRegions() {
   return useQuery({
@@ -21,8 +22,18 @@ export function useMapDistricts(regionId: number | null) {
 export function useMapDistrictObjects(districtId: number | null) {
   return useQuery({
     queryKey: ['map', 'district-objects', districtId],
-    queryFn: () => mapApi.getDistrictObjects(districtId!).then((r) => r.data.data),
+    queryFn: () =>
+      mapApi.getDistrictObjects(districtId!).then((r) => r.data.data),
     enabled: districtId !== null,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useMapRegistryObjects(params: RegistryObjectsParams) {
+  return useQuery({
+    queryKey: ['map', 'registry-objects', params],
+    queryFn: () => mapApi.getRegistryObjects(params).then((r) => r.data.data),
+    enabled: params.typeIds.length > 0,
     staleTime: 5 * 60 * 1000,
   });
 }

@@ -17,6 +17,16 @@ export default function Sidebar({ collapsed }: SidebarProps) {
   const user = useAuthStore((s) => s.user);
   const { data: myCount } = useMyApplicationsCount();
 
+  const activeKey =
+    menuItems
+      .map((item) => item.key)
+      .filter(
+        (key) =>
+          location.pathname === key ||
+          location.pathname.startsWith(key + '/'),
+      )
+      .sort((a, b) => b.length - a.length)[0] ?? location.pathname;
+
   const visibleItems = menuItems
     .filter(
       (item) => !item.roles || item.roles.includes(user?.role as UserRole),
@@ -49,7 +59,7 @@ export default function Sidebar({ collapsed }: SidebarProps) {
       </div>
       <Menu
         mode='inline'
-        selectedKeys={[location.pathname]}
+        selectedKeys={[activeKey]}
         onClick={({ key }) => void navigate(key)}
         items={visibleItems}
         className='border-none'

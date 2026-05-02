@@ -29,7 +29,7 @@ const NonCompliantPage = lazy(
 const MapPage = lazy(() => import('@/pages/map/MapPage'));
 
 const fallback = (
-  <div className='flex h-screen items-center justify-center'>
+  <div className='flex min-h-64 items-center justify-center'>
     <Spin size='large' />
   </div>
 );

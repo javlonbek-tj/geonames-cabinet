@@ -154,9 +154,9 @@ export default function ApplicationDetailPage() {
           />
 
           {mapGeojson && (
-            <div className='overflow-hidden rounded-lg border border-gray-200'>
-              <div className='flex items-center justify-between px-3 py-2 bg-white border-b border-gray-200'>
-                <span className='text-sm font-medium text-gray-700'>
+            <div className='overflow-hidden rounded-lg border border-gray-200 dark:border-[#303030]'>
+              <div className='flex items-center justify-between px-3 py-2 bg-white dark:bg-[#141414] border-b border-gray-200 dark:border-[#303030]'>
+                <span className='text-sm font-medium text-gray-700 dark:text-gray-300'>
                   Xaritada ko&apos;rish
                 </span>
                 <Space size={8}>
@@ -176,8 +176,7 @@ export default function ApplicationDetailPage() {
                   )}
                   <button
                     onClick={() => setMapFullscreen(true)}
-                    className='inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer border border-[#d1d9e8] bg-white hover:bg-gray-50 transition-colors'
-                    style={{ color: '#1565c0' }}
+                    className='inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer border border-[#d1d9e8] dark:border-[#303030] bg-white dark:bg-[#1f1f1f] hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-[#1565c0] dark:text-[#4096ff]'
                   >
                     <ExpandOutlined style={{ fontSize: 12 }} />
                     To&apos;liq ekran

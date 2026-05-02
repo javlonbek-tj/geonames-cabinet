@@ -55,7 +55,7 @@ export default function GeoJsonMap({
   const highlightedIndexRef = useRef<number | null | undefined>(
     highlightedIndex,
   );
-  const [tileKey, setTileKey] = useState<TileKey>('osm');
+  const [tileKey, setTileKey] = useState<TileKey>('satellite');
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -166,23 +166,23 @@ export default function GeoJsonMap({
       style={{ height }}
     >
       <div ref={containerRef} className='w-full h-full' />
-      <div className='absolute bottom-3 right-3 z-[1000] flex rounded-lg overflow-hidden shadow border border-gray-200 text-xs font-medium'>
+      <div className='absolute bottom-3 right-3 z-[1000] flex rounded-lg overflow-hidden shadow border border-gray-200 dark:border-[#303030] text-xs font-medium'>
         <button
           onClick={() => setTileKey('osm')}
           className={`px-3 py-1.5 cursor-pointer transition-colors ${
             tileKey === 'osm'
               ? 'bg-[#1677ff] text-white'
-              : 'bg-white text-gray-600 hover:bg-gray-50'
+              : 'bg-white dark:bg-[#1f1f1f] text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5'
           }`}
         >
           Xarita
         </button>
         <button
           onClick={() => setTileKey('satellite')}
-          className={`px-3 py-1.5 cursor-pointer transition-colors border-l border-gray-200 ${
+          className={`px-3 py-1.5 cursor-pointer transition-colors border-l border-gray-200 dark:border-[#303030] ${
             tileKey === 'satellite'
               ? 'bg-[#1677ff] text-white'
-              : 'bg-white text-gray-600 hover:bg-gray-50'
+              : 'bg-white dark:bg-[#1f1f1f] text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5'
           }`}
         >
           Satellite

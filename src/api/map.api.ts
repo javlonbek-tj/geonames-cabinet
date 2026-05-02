@@ -12,7 +12,9 @@ export interface MapFeature {
     regionDbId?: number;
     districtDbId?: number;
     objectType?: string | null;
+    objectTypeId?: number | null;
     isMfy?: boolean;
+    isStreet?: boolean;
   };
 }
 
@@ -21,13 +23,37 @@ export interface MapFeatureCollection {
   features: MapFeature[];
 }
 
+export interface RegistryObjectsParams {
+  typeIds: number[];
+  regionId?: number | null;
+  districtId?: number | null;
+}
+
 export const mapApi = {
   getRegions: () =>
     api.get<{ status: string; data: MapFeatureCollection }>('/map/regions'),
 
   getDistricts: (regionId: number) =>
-    api.get<{ status: string; data: MapFeatureCollection }>(`/map/regions/${regionId}/districts`),
+    api.get<{ status: string; data: MapFeatureCollection }>(
+      `/map/regions/${regionId}/districts`,
+    ),
 
   getDistrictObjects: (districtId: number) =>
-    api.get<{ status: string; data: MapFeatureCollection }>(`/map/districts/${districtId}/objects`),
+    api.get<{ status: string; data: MapFeatureCollection }>(
+      `/map/districts/${districtId}/objects`,
+    ),
+
+  getRegistryObjects: (params: RegistryObjectsParams) =>
+    api.get<{ status: string; data: MapFeatureCollection }>(
+      '/map/registry-objects',
+      {
+        params: {
+          ...(params.typeIds.length > 0 && {
+            typeIds: params.typeIds.join(','),
+          }),
+          ...(params.regionId && { regionId: params.regionId }),
+          ...(params.districtId && { districtId: params.districtId }),
+        },
+      },
+    ),
 };
