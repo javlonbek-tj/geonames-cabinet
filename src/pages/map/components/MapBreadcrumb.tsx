@@ -11,7 +11,7 @@ interface Props {
 
 export default function MapBreadcrumb({ crumbs }: Props) {
   return (
-    <div className='flex items-center gap-1 px-3 py-2 bg-white/90 dark:bg-black/70 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100 dark:border-white/10 text-xs font-medium'>
+    <div className='flex items-center ml-10 gap-1 px-3 py-2 bg-white/90 dark:bg-black/70 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100 dark:border-white/10 text-xs font-medium'>
       <GlobalOutlined className='text-[#1565c0] mr-0.5' />
       {crumbs.map((crumb, i) => (
         <span key={i} className='flex items-center gap-1'>

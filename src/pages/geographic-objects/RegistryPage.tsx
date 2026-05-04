@@ -12,6 +12,7 @@ import { useRegistryFilters } from './hooks/useRegistryFilters';
 import { useRegistryColumns } from './hooks/useRegistryColumns';
 import RegistryFilters from './components/RegistryFilters';
 import EditRegistryModal from './components/EditRegistryModal';
+import KochirmaModal from './components/KochirmaModal';
 
 const { Title } = Typography;
 const DEFAULT_LIMIT = 10;
@@ -34,6 +35,7 @@ export default function RegistryPage() {
   } = useRegistryFilters();
 
   const [editObj, setEditObj] = useState<GeographicObject | null>(null);
+  const [kochirmaObj, setKochirmaObj] = useState<GeographicObject | null>(null);
 
   const scopedFilters = {
     ...filters,
@@ -75,6 +77,7 @@ export default function RegistryPage() {
     onView: (id) => void navigate(`/geographic-objects/${id}`),
     onEdit: setEditObj,
     onDelete: handleDelete,
+    onKochirma: setKochirmaObj,
   });
 
   return (
@@ -124,6 +127,7 @@ export default function RegistryPage() {
       </Card>
 
       <EditRegistryModal editObj={editObj} onClose={() => setEditObj(null)} />
+      <KochirmaModal obj={kochirmaObj} onClose={() => setKochirmaObj(null)} />
     </div>
   );
 }

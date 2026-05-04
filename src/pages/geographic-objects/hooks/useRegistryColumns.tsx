@@ -1,5 +1,5 @@
 import { Button, Space, Tooltip, Typography } from 'antd';
-import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EyeOutlined, EditOutlined, DeleteOutlined, FileTextOutlined } from '@ant-design/icons';
 import type { TableProps } from 'antd';
 import type { GeographicObject } from '@/types';
 import CopyableNumber from '../components/CopyableNumber';
@@ -14,6 +14,7 @@ interface Params {
   onView: (id: number) => void;
   onEdit: (obj: GeographicObject) => void;
   onDelete: (id: number, name?: string | null) => void;
+  onKochirma: (obj: GeographicObject) => void;
 }
 
 export function useRegistryColumns({
@@ -23,6 +24,7 @@ export function useRegistryColumns({
   onView,
   onEdit,
   onDelete,
+  onKochirma,
 }: Params): TableProps<GeographicObject>['columns'] {
   return [
     {
@@ -115,15 +117,22 @@ export function useRegistryColumns({
     {
       title: 'Amallar',
       key: 'actions',
-      width: 100,
+      width: 120,
       fixed: 'right',
       render: (obj: GeographicObject) => (
-        <Space size={4} className={!isAdmin ? 'w-full justify-center' : ''}>
+        <Space size={4}>
           <Tooltip title="Ko'rish">
             <Button
               size='small'
               icon={<EyeOutlined />}
               onClick={() => onView(obj.id)}
+            />
+          </Tooltip>
+          <Tooltip title="Ko'chirma">
+            <Button
+              size='small'
+              icon={<FileTextOutlined />}
+              onClick={() => onKochirma(obj)}
             />
           </Tooltip>
           {isAdmin && (

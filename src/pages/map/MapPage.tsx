@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Spin } from 'antd';
 import {
   useMapRegions,
@@ -8,6 +8,7 @@ import {
 import { useRegions, useDistricts } from '@/hooks/locations/useLocations';
 import { useAdminCategories } from '@/hooks/admin/useObjectTypes';
 import type { MapFeature } from '@/api/map.api';
+import { partitionRegistryFeatures } from './utils/mapLayerBuilders';
 import MapView from './components/MapView';
 import MapFilterPanel from './components/MapFilterPanel';
 import MapBreadcrumb from './components/MapBreadcrumb';
@@ -27,12 +28,10 @@ export default function MapPage() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
     null,
   );
-  // null = foydalanuvchi hali tanlamagan, default turlarni ishlatadi
   const [selectedTypeIds, setSelectedTypeIds] = useState<number[] | null>(null);
 
   const { data: categories = [] } = useAdminCategories();
 
-  // Default turlar (ko'chalar): categories yuklanishi bilan hisoblanadi
   const defaultTypeIds = useMemo(
     () =>
       categories
@@ -42,7 +41,6 @@ export default function MapPage() {
     [categories],
   );
 
-  // Tuman tanlanganda null → defaultTypeIds, aks holda foydalanuvchi tanlovi
   const activeTypeIds = selectedDistrictId
     ? (selectedTypeIds ?? defaultTypeIds)
     : [];
@@ -65,24 +63,33 @@ export default function MapPage() {
   const selectedRegion = regions.find((r) => r.id === selectedRegionId);
   const selectedDistrict = districts.find((d) => d.id === selectedDistrictId);
 
-  const resetFilter = () => {
+  const resetFilter = useCallback(() => {
     setSelectedCategoryId(null);
     setSelectedTypeIds(null);
-  };
+  }, []);
 
-  const handleRegionClick = (feature: MapFeature) => {
-    const regionDbId =
-      feature.properties.regionDbId ?? feature.properties.regionId;
-    setSelectedRegionId(regionDbId);
-    setSelectedDistrictId(null);
-    resetFilter();
-  };
+  const handleRegionClick = useCallback(
+    (feature: MapFeature) => {
+      const regionDbId =
+        feature.properties.regionDbId ?? feature.properties.regionId;
+      setSelectedRegionId(regionDbId);
+      setSelectedDistrictId(null);
+      resetFilter();
+    },
+    [resetFilter],
+  );
 
-  const handleDistrictClick = (feature: MapFeature) => {
+  const handleDistrictClick = useCallback((feature: MapFeature) => {
     const districtDbId =
       feature.properties.districtDbId ?? feature.properties.districtId;
     setSelectedDistrictId(districtDbId);
-  };
+  }, []);
+
+  const { mfy: mfyFeatures, streets: streetFeatures, other: otherFeatures } =
+    useMemo(
+      () => partitionRegistryFeatures(registryObjects?.features ?? []),
+      [registryObjects],
+    );
 
   const featureCounts = {
     regions:
@@ -91,15 +98,9 @@ export default function MapPage() {
       selectedRegionId !== null && selectedDistrictId === null
         ? (districtFeatures?.features.length ?? 0)
         : 0,
-    mfy:
-      registryObjects?.features.filter((f) => f.properties.isMfy).length ?? 0,
-    streets:
-      registryObjects?.features.filter((f) => f.properties.isStreet).length ??
-      0,
-    registry:
-      registryObjects?.features.filter(
-        (f) => !f.properties.isMfy && !f.properties.isStreet,
-      ).length ?? 0,
+    mfy: mfyFeatures.length,
+    streets: streetFeatures.length,
+    registry: otherFeatures.length,
   };
 
   const breadcrumbs = [

@@ -38,11 +38,6 @@ export const mapApi = {
       `/map/regions/${regionId}/districts`,
     ),
 
-  getDistrictObjects: (districtId: number) =>
-    api.get<{ status: string; data: MapFeatureCollection }>(
-      `/map/districts/${districtId}/objects`,
-    ),
-
   getRegistryObjects: (params: RegistryObjectsParams) =>
     api.get<{ status: string; data: MapFeatureCollection }>(
       '/map/registry-objects',

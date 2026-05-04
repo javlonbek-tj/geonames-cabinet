@@ -1,9 +1,5 @@
-import {
-  useMapLayers,
-  TILES,
-  type MapLayersProps,
-  type TileKey,
-} from '../hooks/useMapLayers';
+import { useMapLayers, type MapLayersProps } from '../hooks/useMapLayers';
+import { TILES, type TileKey } from '../utils/mapConstants';
 
 export type { MapLayersProps as MapViewProps };
 

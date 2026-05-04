@@ -19,16 +19,6 @@ export function useMapDistricts(regionId: number | null) {
   });
 }
 
-export function useMapDistrictObjects(districtId: number | null) {
-  return useQuery({
-    queryKey: ['map', 'district-objects', districtId],
-    queryFn: () =>
-      mapApi.getDistrictObjects(districtId!).then((r) => r.data.data),
-    enabled: districtId !== null,
-    staleTime: 5 * 60 * 1000,
-  });
-}
-
 export function useMapRegistryObjects(params: RegistryObjectsParams) {
   return useQuery({
     queryKey: ['map', 'registry-objects', params],
