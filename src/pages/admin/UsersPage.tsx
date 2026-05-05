@@ -1,15 +1,15 @@
-import { useState, useCallback } from 'react';
+﻿import { useState, useCallback } from 'react';
 import { Table, Button, Typography, Card } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { useUsers, useDeleteUser } from '@/hooks/admin/useUsers';
-import { useRegions, useAllDistricts } from '@/hooks/locations/useLocations';
-import type { User } from '@/types';
-import { useAuthStore } from '@/store/authStore';
-import CreateUserModal from './components/CreateUserModal';
-import EditUserModal from './components/EditUserModal';
-import ResetPasswordModal from './components/ResetPasswordModal';
-import UsersFilters from './components/UsersFilters';
-import { useUsersColumns } from './hooks/useUsersColumns';
+import { useUsers, useDeleteUser } from '@/entities/user/api/useUsers';
+import { useRegions, useAllDistricts } from '@/entities/location/api/useLocations';
+import type { User } from '@/entities/user/model/types';
+import { useAuthStore } from '@/entities/user/model/authStore';
+import CreateUserModal from '@/features/admin/ui/CreateUserModal';
+import EditUserModal from '@/features/admin/ui/EditUserModal';
+import ResetPasswordModal from '@/features/admin/ui/ResetPasswordModal';
+import UsersFilters from '@/features/admin/ui/UsersFilters';
+import { useUsersColumns } from '@/features/admin/hooks/useUsersColumns';
 
 const { Title } = Typography;
 

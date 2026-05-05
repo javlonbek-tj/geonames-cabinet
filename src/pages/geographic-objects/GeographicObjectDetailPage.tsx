@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+﻿import { useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import {
   Card,
@@ -19,18 +19,14 @@ import {
   CloseOutlined,
   UploadOutlined,
 } from '@ant-design/icons';
-import GeoJsonMap from '@/components/map/GeoJsonMap';
-import { useGeographicObject } from '@/hooks/geographic-objects/useGeographicObject';
-import { useUpdateGeometry } from '@/hooks/geographic-objects/useUpdateGeometry';
-import { useAuthStore } from '@/store/authStore';
-import { ROLES } from '@/types/user';
-import {
-  STATUS_LABELS,
-  ACTION_LABELS,
-  ACTION_COLORS,
-  ROLE_LABELS,
-} from '@/constants';
-import type { ApplicationStatus } from '@/types';
+import GeoJsonMap from '@/shared/ui/GeoJsonMap';
+import { useGeographicObject } from '@/entities/geographic-object/api/useGeographicObject';
+import { useUpdateGeometry } from '@/features/registry/api/useUpdateGeometry';
+import { useAuthStore } from '@/entities/user/model/authStore';
+import { ROLES } from '@/entities/user/model/types';
+import { ROLE_LABELS } from '@/shared/constants';
+import { STATUS_LABELS, ACTION_LABELS, ACTION_COLORS } from '@/entities/application/lib/statuses';
+import type { ApplicationStatus } from '@/entities/application/model/types';
 
 const { Title, Text } = Typography;
 
@@ -50,7 +46,9 @@ export default function GeographicObjectDetailPage() {
   const navigate = useNavigate();
   const isAdmin = useAuthStore((s) => s.user?.role === ROLES.ADMIN);
   const { data: obj, isLoading } = useGeographicObject(Number(id));
-  const { mutate: updateGeometry, isPending: isUploading } = useUpdateGeometry(Number(id));
+  const { mutate: updateGeometry, isPending: isUploading } = useUpdateGeometry(
+    Number(id),
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [commentExpanded, setCommentExpanded] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
@@ -71,7 +69,9 @@ export default function GeographicObjectDetailPage() {
         if (!geometry) throw new Error();
         updateGeometry(geometry);
       } catch {
-        void import('antd').then(({ message }) => message.error("Noto'g'ri GeoJSON format"));
+        void import('antd').then(({ message }) =>
+          message.error("Noto'g'ri GeoJSON format"),
+        );
       } finally {
         e.target.value = '';
       }
@@ -288,7 +288,7 @@ export default function GeographicObjectDetailPage() {
         {/* Fullscreen overlay */}
         {fullscreen && geometry && (
           <div
-            className='fixed inset-0 z-[9999] flex flex-col'
+            className='fixed inset-0 z-9999 flex flex-col'
             style={{ background: '#000' }}
           >
             <div

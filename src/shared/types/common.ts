@@ -1,0 +1,23 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type GeoJSON = Record<string, any>;
+
+export interface ApiResponse<T> {
+  status: 'success' | 'fail' | 'error';
+  data: T;
+}
+
+export interface ApiMessage {
+  status: 'success' | 'fail' | 'error';
+  message: string;
+}
+
+export interface PaginatedResponse<T> {
+  status: 'success' | 'fail' | 'error';
+  data: T[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}

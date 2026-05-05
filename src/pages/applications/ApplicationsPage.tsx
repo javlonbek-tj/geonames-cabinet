@@ -1,13 +1,13 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Table, Tag, Typography, Button, Card, type TableProps } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
-import { useApplications } from '@/hooks/applications/useApplications';
-import { useAuthStore } from '@/store/authStore';
-import { STATUS_LABELS, STATUS_COLORS } from '@/constants';
-import { ROLES, REGIONAL_ROLES } from '@/types/user';
-import type { Application, ApplicationStatus } from '@/types';
-import ApplicationFilters from './components/ApplicationFilters';
+import { useApplications } from '@/entities/application/api/useApplications';
+import { useAuthStore } from '@/entities/user/model/authStore';
+import { STATUS_LABELS, STATUS_COLORS } from '@/entities/application/lib/statuses';
+import { ROLES, REGIONAL_ROLES } from '@/entities/user/model/types';
+import type { Application, ApplicationStatus } from '@/entities/application/model/types';
+import ApplicationFilters from '@/features/applications/ui/ApplicationFilters';
 
 const { Title } = Typography;
 

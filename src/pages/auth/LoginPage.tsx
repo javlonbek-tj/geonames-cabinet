@@ -1,9 +1,9 @@
-import { Input, Button, Spin } from 'antd';
+﻿import { Input, Button, Spin } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useLogin } from '@/hooks/auth/useLogin';
-import { loginSchema, type LoginSchema } from '@/lib/schemas/auth.schema';
+import { useLogin } from '@/features/auth/api/useLogin';
+import { loginSchema, type LoginSchema } from '@/shared/lib/schemas/auth.schema';
 
 const inputClass =
   'bg-transparent border-0 border-b-2 border-b-[#CBDDF1] rounded-none shadow-none text-[#e0e0ff] pl-0';

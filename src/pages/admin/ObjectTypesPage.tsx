@@ -1,15 +1,15 @@
-import { useState, useCallback } from 'react';
+﻿import { useState, useCallback } from 'react';
 import { Card, Table, Button, Typography, Empty } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   useAdminCategories,
   useDeleteCategory,
   useDeleteType,
-} from '@/hooks/admin/useObjectTypes';
-import type { ObjectCategory, ObjectType } from '@/types';
-import CategoryModal from './components/CategoryModal';
-import TypeModal from './components/TypeModal';
-import { useObjectTypeColumns } from './hooks/useObjectTypeColumns';
+} from '@/entities/object-type/api/useAdminObjectTypes';
+import type { ObjectCategory, ObjectType } from '@/entities/object-type/model/types';
+import CategoryModal from '@/features/admin/ui/CategoryModal';
+import TypeModal from '@/features/admin/ui/TypeModal';
+import { useObjectTypeColumns } from '@/features/admin/hooks/useObjectTypeColumns';
 
 const { Title } = Typography;
 

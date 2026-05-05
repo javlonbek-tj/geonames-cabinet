@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+﻿import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { Button, Tag, Typography, Space, Spin, Empty } from 'antd';
 import {
@@ -7,29 +7,29 @@ import {
   ExpandOutlined,
   CloseOutlined,
 } from '@ant-design/icons';
-import GeoJsonMap from '@/components/map/GeoJsonMap';
+import GeoJsonMap from '@/shared/ui/GeoJsonMap';
 import {
   useApplication,
   useAvailableActions,
-} from '@/hooks/applications/useApplication';
-import { useDocuments } from '@/hooks/uploads/useDocuments';
-import { useDiscussionResults } from '@/hooks/public/usePublicDiscussion';
-import { useAuthStore } from '@/store/authStore';
-import { ROLES } from '@/types/user';
-import { STATUS_LABELS, STATUS_COLORS, APP_STATUS } from '@/constants';
+} from '@/entities/application/api/useApplication';
+import { useDocuments } from '@/entities/document/api/useDocuments';
+import { useDiscussionResults } from '@/features/public-discussion/api/usePublicDiscussion';
+import { useAuthStore } from '@/entities/user/model/authStore';
+import { ROLES } from '@/entities/user/model/types';
+import { STATUS_LABELS, STATUS_COLORS, APP_STATUS } from '@/entities/application/lib/statuses';
 import {
   buildFeatureCollection,
   downloadApplicationGeoJson,
-} from '@/lib/geoUtils';
-import { useNameEdits } from './hooks/useNameEdits';
-import ApplicationInfoCard from './components/ApplicationInfoCard';
-import GeoObjectsTable from './components/GeoObjectsTable';
-import ApplicationHistory from './components/ApplicationHistory';
-import DiscussionResultsCard from './components/DiscussionResultsCard';
-import CommissionPanel from './components/CommissionPanel';
-import ApplicationActions from './components/ApplicationActions';
-import DocumentsCard from './components/DocumentsCard';
-import type { ApplicationStatus } from '@/types';
+} from '@/entities/geographic-object/lib/geoUtils';
+import { useNameEdits } from '@/features/applications/hooks/useNameEdits';
+import ApplicationInfoCard from '@/features/applications/ui/ApplicationInfoCard';
+import GeoObjectsTable from '@/features/applications/ui/GeoObjectsTable';
+import ApplicationHistory from '@/features/applications/ui/ApplicationHistory';
+import DiscussionResultsCard from '@/features/applications/ui/DiscussionResultsCard';
+import CommissionPanel from '@/features/commission/ui/CommissionPanel';
+import ApplicationActions from '@/features/applications/ui/ApplicationActions';
+import DocumentsCard from '@/features/applications/ui/DocumentsCard';
+import type { ApplicationStatus } from '@/entities/application/model/types';
 
 const { Title } = Typography;
 

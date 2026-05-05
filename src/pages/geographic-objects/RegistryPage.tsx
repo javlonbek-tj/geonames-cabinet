@@ -1,18 +1,18 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Card, Table, Typography, Modal, message } from 'antd';
 import {
   useRegistry,
   useDeleteRegistryObject,
-} from '@/hooks/geographic-objects/useRegistry';
-import type { GeographicObject } from '@/types';
-import { useAuthStore } from '@/store/authStore';
-import { ROLES, DISTRICT_ROLES, REGIONAL_ROLES } from '@/types/user';
-import { useRegistryFilters } from './hooks/useRegistryFilters';
-import { useRegistryColumns } from './hooks/useRegistryColumns';
-import RegistryFilters from './components/RegistryFilters';
-import EditRegistryModal from './components/EditRegistryModal';
-import KochirmaModal from './components/KochirmaModal';
+} from '@/features/registry/api/useRegistry';
+import type { GeographicObject } from '@/entities/geographic-object/model/types';
+import { useAuthStore } from '@/entities/user/model/authStore';
+import { ROLES, DISTRICT_ROLES, REGIONAL_ROLES } from '@/entities/user/model/types';
+import { useRegistryFilters } from '@/features/registry/hooks/useRegistryFilters';
+import { useRegistryColumns } from '@/features/registry/hooks/useRegistryColumns';
+import RegistryFilters from '@/features/registry/ui/RegistryFilters';
+import EditRegistryModal from '@/features/registry/ui/EditRegistryModal';
+import KochirmaModal from '@/features/registry/ui/KochirmaModal';
 
 const { Title } = Typography;
 const DEFAULT_LIMIT = 10;

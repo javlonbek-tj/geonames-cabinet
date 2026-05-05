@@ -1,8 +1,8 @@
-import { useState, useCallback } from 'react';
+﻿import { useState, useCallback } from 'react';
 import { Card, Table, Tag, Typography, Input, Select } from 'antd';
 import { WarningOutlined } from '@ant-design/icons';
-import { useNonCompliantList } from '@/hooks/geo-flags/useGeoFlags';
-import { useRegions, useDistricts } from '@/hooks/locations/useLocations';
+import { useNonCompliantList } from '@/entities/geo-flag/api/useGeoFlags';
+import { useRegions, useDistricts } from '@/entities/location/api/useLocations';
 import { nonCompliantColumns } from './nonCompliantColumns';
 
 const { Title } = Typography;

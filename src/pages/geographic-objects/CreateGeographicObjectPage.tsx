@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+﻿import { useState, useMemo, useEffect, useRef } from 'react';
 import {
   Card,
   Form,
@@ -11,11 +11,11 @@ import {
 } from 'antd';
 import { InboxOutlined, DeleteOutlined, FileOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
-import { useCreateGeographicObject } from '@/hooks/geographic-objects/useCreateGeographicObject';
-import { useObjectTypes } from '@/hooks/object-types/useObjectTypes';
-import { useAuthStore } from '@/store/authStore';
-import GeoJsonMap from '@/components/map/GeoJsonMap';
-import type { GeoJSON } from '@/types';
+import { useCreateGeographicObject } from '@/features/registry/api/useCreateGeographicObject';
+import { useObjectTypes } from '@/entities/object-type/api/useObjectTypes';
+import { useAuthStore } from '@/entities/user/model/authStore';
+import GeoJsonMap from '@/shared/ui/GeoJsonMap';
+import type { GeoJSON } from '@/shared/types/common';
 
 const { Title, Text } = Typography;
 const { Dragger } = Upload;
@@ -187,6 +187,7 @@ export default function CreateGeographicObjectPage() {
   );
 
   const onFinish = (values: { existsInRegistry: boolean }) => {
+    if (!user?.regionId || !user?.districtId) return;
     if (objects.length === 0) {
       setParseError('GeoJSON fayl yuklanishi shart');
       return;
@@ -194,8 +195,8 @@ export default function CreateGeographicObjectPage() {
     if (allErrors) return;
 
     create({
-      regionId: user.regionId!,
-      districtId: user.districtId!,
+      regionId: user.regionId,
+      districtId: user.districtId,
       existsInRegistry: values.existsInRegistry,
       objects: objects.map((o) => ({
         nameUz: o.nameUz ?? undefined,
@@ -265,7 +266,7 @@ export default function CreateGeographicObjectPage() {
             <Card title='GeoJSON fayl yuklash' size='small'>
               {parseError && (
                 <Alert
-                  message={parseError}
+                  title={parseError}
                   type='error'
                   showIcon
                   className='mb-3'
@@ -323,7 +324,7 @@ export default function CreateGeographicObjectPage() {
                   type='error'
                   showIcon
                   className='mb-3'
-                  message={`${errorCount} ta obyektda majburiy maydonlar to'ldirilmagan`}
+                  title={`${errorCount} ta obyektda majburiy maydonlar to'ldirilmagan`}
                 />
               )}
 
@@ -350,7 +351,7 @@ export default function CreateGeographicObjectPage() {
             <Card size='small'>
               {parseError && (
                 <Alert
-                  message={parseError}
+                  title={parseError}
                   type='error'
                   showIcon
                   className='mb-3'

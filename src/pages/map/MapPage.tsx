@@ -1,17 +1,17 @@
-import { useState, useMemo, useCallback } from 'react';
+﻿import { useState, useMemo, useCallback } from 'react';
 import { Spin } from 'antd';
 import {
   useMapRegions,
   useMapDistricts,
   useMapRegistryObjects,
-} from '@/hooks/map/useMapData';
-import { useRegions, useDistricts } from '@/hooks/locations/useLocations';
-import { useAdminCategories } from '@/hooks/admin/useObjectTypes';
-import type { MapFeature } from '@/api/map.api';
-import { partitionRegistryFeatures } from './utils/mapLayerBuilders';
-import MapView from './components/MapView';
-import MapFilterPanel from './components/MapFilterPanel';
-import MapBreadcrumb from './components/MapBreadcrumb';
+} from '@/features/map-view/api/useMapData';
+import { useRegions, useDistricts } from '@/entities/location/api/useLocations';
+import { useAdminCategories } from '@/entities/object-type/api/useAdminObjectTypes';
+import type { MapFeature } from '@/features/map-view/api/map.api';
+import { partitionRegistryFeatures } from '@/features/map-view/lib/mapLayerBuilders';
+import MapView from '@/features/map-view/ui/MapView';
+import MapFilterPanel from '@/features/map-view/ui/MapFilterPanel';
+import MapBreadcrumb from '@/features/map-view/ui/MapBreadcrumb';
 
 const DEFAULT_TYPE_NAMES = new Set([
   "Ko'cha",

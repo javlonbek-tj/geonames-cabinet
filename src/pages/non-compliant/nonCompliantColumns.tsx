@@ -1,6 +1,6 @@
-import { Typography } from 'antd';
+﻿import { Typography } from 'antd';
 import type { TableProps } from 'antd';
-import type { NonCompliantItem } from '@/api/geo-flags.api';
+import type { NonCompliantItem } from '@/entities/geo-flag/api/geo-flags.api';
 
 const { Text } = Typography;
 
