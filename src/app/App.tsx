@@ -15,16 +15,29 @@ export default function App() {
       <StyleProvider layer>
         <ConfigProvider
           theme={{
-            algorithm: isDark ? antTheme.darkAlgorithm : antTheme.defaultAlgorithm,
+            algorithm: isDark
+              ? antTheme.darkAlgorithm
+              : antTheme.defaultAlgorithm,
             token: { fontFamily: "'Inter Variable', sans-serif" },
             components: {
               Menu: isDark
-                ? { itemSelectedBg: 'rgba(22, 119, 255, 0.15)', itemSelectedColor: '#4096ff' }
+                ? {
+                    itemSelectedBg: 'rgba(22, 119, 255, 0.15)',
+                    itemSelectedColor: '#4096ff',
+                  }
                 : {},
             },
           }}
-          locale={{ ...uzUZ, Pagination: { ...uzUZ.Pagination, items_per_page: '' } }}
-          renderEmpty={() => <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Ma'lumot topilmadi" />}
+          locale={{
+            ...uzUZ,
+            Pagination: { ...uzUZ.Pagination, items_per_page: '' },
+          }}
+          renderEmpty={() => (
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description="Ma'lumot topilmadi"
+            />
+          )}
         >
           <AntApp>
             <AppRouter />
