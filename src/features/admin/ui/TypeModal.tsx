@@ -1,6 +1,7 @@
 ﻿import { useEffect } from 'react';
 import { Modal, Form, Input, Select } from 'antd';
-import { useCreateType, useUpdateType, useAdminCategories } from '@/entities/object-type/api/useAdminObjectTypes';
+import { useAdminCategories } from '@/entities/object-type/api/useAdminObjectTypes';
+import { useCreateType, useUpdateType } from '@/features/admin/api/useObjectTypeMutations';
 import type { ObjectType } from '@/entities/object-type/model/types';
 
 type ModalState = {

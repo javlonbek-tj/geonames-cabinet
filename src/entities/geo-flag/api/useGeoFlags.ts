@@ -1,4 +1,4 @@
-﻿import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+﻿import { useQuery } from '@tanstack/react-query';
 import * as api from '@/entities/geo-flag/api/geo-flags.api';
 
 export function useApplicationFlags(applicationId: number) {
@@ -6,22 +6,6 @@ export function useApplicationFlags(applicationId: number) {
     queryKey: ['geo-flags', applicationId],
     queryFn: () => api.getApplicationFlags(applicationId),
     enabled: applicationId > 0,
-  });
-}
-
-export function useToggleGeoFlag(applicationId: number) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({
-      geoObjectId,
-      comment,
-    }: {
-      geoObjectId: number;
-      comment?: string;
-    }) => api.toggleGeoFlag(applicationId, geoObjectId, comment),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['geo-flags', applicationId] });
-    },
   });
 }
 

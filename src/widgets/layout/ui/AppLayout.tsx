@@ -10,7 +10,7 @@ import {
   MoonOutlined,
 } from '@ant-design/icons';
 import { useThemeStore } from '@/app/model/themeStore';
-import { Outlet, useNavigate, useMatches } from 'react-router';
+import { Outlet, useNavigate, useMatches, useNavigation } from 'react-router';
 import { useMutation } from '@tanstack/react-query';
 import Sidebar from './Sidebar';
 import { useAuthStore } from '@/entities/user/model/authStore';
@@ -27,6 +27,7 @@ export default function AppLayout() {
   const { user, clearAuth } = useAuthStore();
   const { isDark, toggle } = useThemeStore();
   const navigate = useNavigate();
+  const { state: navState } = useNavigation();
 
   const matches = useMatches();
   useEffect(() => {
@@ -67,45 +68,53 @@ export default function AppLayout() {
   const siderWidth = collapsed ? 80 : 260;
 
   return (
-    <Layout className='min-h-screen'>
+    <Layout className="min-h-screen">
+      {navState === 'loading' && (
+        <div className="fixed top-0 left-0 right-0 z-9999 h-0.5 overflow-hidden bg-blue-100">
+          <div
+            className="h-full bg-blue-600"
+            style={{ animation: 'loading-bar 1s ease-in-out infinite' }}
+          />
+        </div>
+      )}
       <Sidebar collapsed={collapsed} />
       <Layout
         style={{ marginLeft: siderWidth, transition: 'margin-left 0.2s' }}
       >
-        <Header className='px-0 bg-white dark:bg-[#141414] flex items-center justify-between pr-4 border-b border-gray-200 dark:border-[#303030] sticky top-0 z-100 w-full'>
+        <Header className="px-0 bg-white dark:bg-[#141414] flex items-center justify-between pr-4 border-b border-gray-200 dark:border-[#303030] sticky top-0 z-100 w-full">
           <Button
-            type='text'
+            type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
-            className='text-base w-16 h-16'
+            className="text-base w-16 h-16"
           />
-          <div className='flex items-center gap-2'>
+          <div className="flex items-center gap-2">
             <Button
-              type='text'
+              type="text"
               icon={isDark ? <SunOutlined /> : <MoonOutlined />}
               onClick={toggle}
-              className='text-base w-10 h-10'
+              className="text-base w-10 h-10"
             />
             <Dropdown
               menu={{ items: dropdownItems }}
-              placement='bottomRight'
+              placement="bottomRight"
               arrow
             >
-              <div className='flex items-center gap-2 cursor-pointer select-none'>
-                <div className='text-right hidden sm:block'>
-                  <div className='text-sm font-medium leading-tight'>
+              <div className="flex items-center gap-2 cursor-pointer select-none">
+                <div className="text-right hidden sm:block">
+                  <div className="text-sm font-medium leading-tight">
                     {user?.fullName ?? user?.username}
                   </div>
-                  <div className='text-xs text-gray-400 leading-tight'>
+                  <div className="text-xs text-gray-400 leading-tight">
                     {user?.role ? ROLE_LABELS[user.role] : ''}
                   </div>
                 </div>
-                <Avatar icon={<UserOutlined />} className='bg-[#1677ff]' />
+                <Avatar icon={<UserOutlined />} className="bg-[#1677ff]" />
               </div>
             </Dropdown>
           </div>
         </Header>
-        <Content className='my-6 mx-4 p-6 min-h-70 bg-white dark:bg-[#141414] rounded-lg'>
+        <Content className="my-6 mx-4 p-6 min-h-70 bg-white dark:bg-[#141414] rounded-lg">
           <Outlet />
         </Content>
       </Layout>

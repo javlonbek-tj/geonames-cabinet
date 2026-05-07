@@ -8,7 +8,7 @@ export default function CopyableNumber({ value }: { value: string }) {
     void navigator.clipboard.writeText(value).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
-    });
+    }).catch(() => {});
   };
   return (
     <Tooltip title={copied ? 'Nusxalandi!' : 'Nusxalash'}>

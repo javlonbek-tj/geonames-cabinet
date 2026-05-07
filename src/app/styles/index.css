@@ -11,6 +11,12 @@ body {
   font-family: var(--font-sans);
 }
 
+@keyframes loading-bar {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(300%); }
+}
+
 .registry-table .ant-table-tbody > tr > td {
   padding-top: 5px !important;
   padding-bottom: 5px !important;

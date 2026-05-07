@@ -4,6 +4,7 @@ import { StyleProvider } from '@ant-design/cssinjs';
 import { App as AntApp, ConfigProvider, Empty, theme as antTheme } from 'antd';
 import uzUZ from 'antd/locale/uz_UZ';
 import AppRouter from '@/app/router';
+import ErrorBoundary from '@/shared/ui/ErrorBoundary';
 import { queryClient } from '@/shared/lib/queryClient';
 import { useThemeStore } from '@/app/model/themeStore';
 
@@ -40,11 +41,13 @@ export default function App() {
           )}
         >
           <AntApp>
-            <AppRouter />
+            <ErrorBoundary>
+              <AppRouter />
+            </ErrorBoundary>
           </AntApp>
         </ConfigProvider>
       </StyleProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   );
 }

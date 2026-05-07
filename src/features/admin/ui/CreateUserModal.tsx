@@ -1,5 +1,5 @@
 ﻿import { Modal, Form, Input, Select } from 'antd';
-import { useCreateUser } from '@/entities/user/api/useUsers';
+import { useCreateUser } from '@/features/admin/api/useUserMutations';
 import { useRegions, useDistricts } from '@/entities/location/api/useLocations';
 import type { CreateUserPayload } from '@/entities/user/api/admin.api';
 import {

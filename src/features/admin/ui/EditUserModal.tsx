@@ -1,6 +1,6 @@
 ﻿import { useEffect } from 'react';
 import { Modal, Form, Input, Select, Switch } from 'antd';
-import { useUpdateUser } from '@/entities/user/api/useUsers';
+import { useUpdateUser } from '@/features/admin/api/useUserMutations';
 import { useRegions, useDistricts } from '@/entities/location/api/useLocations';
 import type { UpdateUserPayload } from '@/entities/user/api/admin.api';
 import {

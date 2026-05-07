@@ -1,11 +1,8 @@
 ﻿import { useState, useCallback } from 'react';
 import { Card, Table, Button, Typography, Empty } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import {
-  useAdminCategories,
-  useDeleteCategory,
-  useDeleteType,
-} from '@/entities/object-type/api/useAdminObjectTypes';
+import { useAdminCategories } from '@/entities/object-type/api/useAdminObjectTypes';
+import { useDeleteCategory, useDeleteType } from '@/features/admin/api/useObjectTypeMutations';
 import type { ObjectCategory, ObjectType } from '@/entities/object-type/model/types';
 import CategoryModal from '@/features/admin/ui/CategoryModal';
 import TypeModal from '@/features/admin/ui/TypeModal';

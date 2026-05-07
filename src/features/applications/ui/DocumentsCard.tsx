@@ -9,7 +9,7 @@ import {
 import {
   useUploadDocument,
   useDeleteDocument,
-} from '@/entities/document/api/useDocuments';
+} from '@/features/applications/api/useDocumentMutations';
 import type { Document } from '@/entities/document/model/types';
 
 interface Props {

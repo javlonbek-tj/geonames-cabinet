@@ -1,7 +1,8 @@
 ﻿import { useState, useCallback } from 'react';
 import { Table, Button, Typography, Card } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { useUsers, useDeleteUser } from '@/entities/user/api/useUsers';
+import { useUsers } from '@/entities/user/api/useUsers';
+import { useDeleteUser } from '@/features/admin/api/useUserMutations';
 import { useRegions, useAllDistricts } from '@/entities/location/api/useLocations';
 import type { User } from '@/entities/user/model/types';
 import { useAuthStore } from '@/entities/user/model/authStore';

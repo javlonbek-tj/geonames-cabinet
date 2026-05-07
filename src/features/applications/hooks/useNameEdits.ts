@@ -1,5 +1,5 @@
 ﻿import { useState } from 'react';
-import { useUpdateObjectNames } from '@/features/registry/api/useUpdateObjectNames';
+import { useUpdateObjectNames } from '@/features/applications/api/useUpdateObjectNames';
 import { latinToKrill } from '@/shared/lib/transliterate';
 import type { GeographicObject } from '@/entities/geographic-object/model/types';
 

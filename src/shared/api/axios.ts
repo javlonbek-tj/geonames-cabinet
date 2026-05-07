@@ -5,6 +5,7 @@ import { env } from '../config/env';
 const api = axios.create({
   baseURL: env.apiUrl,
   withCredentials: true, // send refreshToken cookie from backend
+  timeout: 30_000,
 });
 
 // Attach access token to every request

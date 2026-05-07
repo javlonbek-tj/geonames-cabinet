@@ -4,9 +4,15 @@ import { PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import { useApplications } from '@/entities/application/api/useApplications';
 import { useAuthStore } from '@/entities/user/model/authStore';
-import { STATUS_LABELS, STATUS_COLORS } from '@/entities/application/lib/statuses';
+import {
+  STATUS_LABELS,
+  STATUS_COLORS,
+} from '@/entities/application/lib/statuses';
 import { ROLES, REGIONAL_ROLES } from '@/entities/user/model/types';
-import type { Application, ApplicationStatus } from '@/entities/application/model/types';
+import type {
+  Application,
+  ApplicationStatus,
+} from '@/entities/application/model/types';
 import ApplicationFilters from '@/features/applications/ui/ApplicationFilters';
 
 const { Title } = Typography;
@@ -90,14 +96,14 @@ export default function ApplicationsPage() {
   });
 
   return (
-    <div className='flex flex-col gap-4'>
-      <div className='flex items-center justify-between'>
-        <Title level={4} className='m-0'>
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <Title level={4} className="m-0">
           Arizalar
         </Title>
         {user?.role === ROLES.DKP_FILIAL && (
           <Button
-            type='primary'
+            type="primary"
             icon={<PlusOutlined />}
             onClick={() => void navigate('/geographic-objects/create')}
           >
@@ -122,13 +128,13 @@ export default function ApplicationsPage() {
         userRegionId={user?.regionId ?? undefined}
       />
 
-      <Card size='small' styles={{ body: { padding: 0 } }}>
+      <Card size="small" styles={{ body: { padding: 0 } }}>
         <Table
-          rowKey='id'
+          rowKey="id"
           columns={columns}
           dataSource={data?.data ?? []}
           loading={isFetching}
-          size='small'
+          size="small"
           bordered
           onRow={(record) => ({
             onClick: () => void navigate(`/applications/${record.id}`),
@@ -142,7 +148,7 @@ export default function ApplicationsPage() {
             showSizeChanger: true,
             pageSizeOptions: ['10', '20', '50', '100'],
             showTotal: (total) => (
-              <span className='inline-flex items-center gap-1 px-3 py-0.5 rounded text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950'>
+              <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950">
                 Jami: {total} ta
               </span>
             ),

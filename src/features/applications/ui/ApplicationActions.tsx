@@ -1,6 +1,6 @@
 ﻿import { useState } from 'react';
 import { Card, Button, Alert, Modal, Input, Typography } from 'antd';
-import { usePerformAction } from '@/entities/application/api/useApplication';
+import { usePerformAction } from '@/features/applications/api/usePerformAction';
 import type { AvailableAction } from '@/entities/application/model/types';
 
 const { Text } = Typography;

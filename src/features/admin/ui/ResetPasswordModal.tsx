@@ -1,5 +1,5 @@
 ﻿import { Modal, Form, Input } from 'antd';
-import { useResetPassword } from '@/entities/user/api/useUsers';
+import { useResetPassword } from '@/features/admin/api/useUserMutations';
 import type { User } from '@/entities/user/model/types';
 
 interface Props {

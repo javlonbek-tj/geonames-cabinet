@@ -46,7 +46,7 @@ export function useLogin() {
     },
     onError: (error: ApiError) => {
       if (error.response?.status === 429) {
-        const seconds = parseInt(error.response.headers?.['retry-after'] ?? '60');
+        const seconds = Math.max(10, parseInt(error.response.headers?.['retry-after'] ?? '60', 10) || 60);
         startCountdown(seconds);
       } else {
         void message.error(error.response?.data?.message ?? 'Xatolik yuz berdi');

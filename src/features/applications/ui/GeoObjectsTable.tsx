@@ -10,10 +10,8 @@ import {
   Typography,
 } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
-import {
-  useApplicationFlags,
-  useToggleGeoFlag,
-} from '@/entities/geo-flag/api/useGeoFlags';
+import { useApplicationFlags } from '@/entities/geo-flag/api/useGeoFlags';
+import { useToggleGeoFlag } from '@/features/applications/api/useToggleGeoFlag';
 import type { GeographicObject } from '@/entities/geographic-object/model/types';
 import type { useNameEdits } from '../hooks/useNameEdits';
 

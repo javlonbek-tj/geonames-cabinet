@@ -1,6 +1,6 @@
 ﻿import { useEffect } from 'react';
 import { Modal, Form, Input } from 'antd';
-import { useCreateCategory, useUpdateCategory } from '@/entities/object-type/api/useAdminObjectTypes';
+import { useCreateCategory, useUpdateCategory } from '@/features/admin/api/useObjectTypeMutations';
 import type { ObjectCategory } from '@/entities/object-type/model/types';
 
 type ModalState = { mode: 'create' | 'edit'; item?: ObjectCategory } | null;

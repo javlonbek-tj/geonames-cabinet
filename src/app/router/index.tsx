@@ -1,98 +1,82 @@
-﻿import { createBrowserRouter, RouterProvider, Navigate } from 'react-router';
-import { lazy, Suspense } from 'react';
-import { Spin } from 'antd';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router';
 import ProtectedRoute from '@/shared/ui/ProtectedRoute';
 import GuestRoute from '@/shared/ui/GuestRoute';
 import AppLayout from '@/widgets/layout/ui/AppLayout';
+import RouteErrorPage from '@/shared/ui/RouteErrorPage';
+import NotFoundPage from '@/pages/not-found/NotFoundPage';
 
-const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
-const ApplicationsPage = lazy(
-  () => import('@/pages/applications/ApplicationsPage'),
-);
-const ApplicationDetailPage = lazy(
-  () => import('@/pages/applications/ApplicationDetailPage'),
-);
-const CreateGeographicObjectPage = lazy(
-  () => import('@/pages/geographic-objects/CreateGeographicObjectPage'),
-);
-const RegistryPage = lazy(
-  () => import('@/pages/geographic-objects/RegistryPage'),
-);
-const GeographicObjectDetailPage = lazy(
-  () => import('@/pages/geographic-objects/GeographicObjectDetailPage'),
-);
-const UsersPage = lazy(() => import('@/pages/admin/UsersPage'));
-const ObjectTypesPage = lazy(() => import('@/pages/admin/ObjectTypesPage'));
-const NonCompliantPage = lazy(
-  () => import('@/pages/non-compliant/NonCompliantPage'),
-);
-const MapPage = lazy(() => import('@/pages/map/MapPage'));
-
-const fallback = (
-  <div className='flex min-h-64 items-center justify-center'>
-    <Spin size='large' />
-  </div>
-);
-
-const wrap = (Component: React.ComponentType) => (
-  <Suspense fallback={fallback}>
-    <Component />
-  </Suspense>
-);
+const lazy = (path: () => Promise<{ default: React.ComponentType }>) => ({
+  lazy: () => path().then((m) => ({ Component: m.default })),
+});
 
 const router = createBrowserRouter([
   {
     element: <GuestRoute />,
-    children: [{ path: '/login', element: wrap(LoginPage) }],
+    errorElement: <RouteErrorPage />,
+    children: [
+      { path: '/login', ...lazy(() => import('@/pages/auth/LoginPage')) },
+    ],
   },
   {
     element: <ProtectedRoute />,
+    errorElement: <RouteErrorPage />,
     children: [
       {
         element: <AppLayout />,
         children: [
-          { path: '/', element: <Navigate to='/applications' replace /> },
+          { path: '/', element: <Navigate to="/applications" replace /> },
           {
             path: '/applications',
-            element: wrap(ApplicationsPage),
             handle: { title: 'Arizalar' },
+            ...lazy(() => import('@/pages/applications/ApplicationsPage')),
           },
           {
             path: '/applications/:id',
-            element: wrap(ApplicationDetailPage),
             handle: { title: 'Ariza' },
+            ...lazy(() => import('@/pages/applications/ApplicationDetailPage')),
           },
           {
             path: '/geographic-objects',
-            element: wrap(RegistryPage),
             handle: { title: 'Reyestr' },
-          },
-          {
-            path: '/geographic-objects/:id',
-            element: wrap(GeographicObjectDetailPage),
-            handle: { title: 'Geografik obyekt' },
+            ...lazy(() => import('@/pages/geographic-objects/RegistryPage')),
           },
           {
             path: '/geographic-objects/create',
-            element: wrap(CreateGeographicObjectPage),
             handle: { title: 'Obyekt yaratish' },
+            ...lazy(
+              () =>
+                import('@/pages/geographic-objects/CreateGeographicObjectPage')
+            ),
+          },
+          {
+            path: '/geographic-objects/:id',
+            handle: { title: 'Geografik obyekt' },
+            ...lazy(
+              () =>
+                import('@/pages/geographic-objects/GeographicObjectDetailPage')
+            ),
           },
           {
             path: '/admin/users',
-            element: wrap(UsersPage),
             handle: { title: 'Foydalanuvchilar' },
+            ...lazy(() => import('@/pages/admin/UsersPage')),
           },
           {
             path: '/admin/object-types',
-            element: wrap(ObjectTypesPage),
             handle: { title: 'Obyekt turlari' },
+            ...lazy(() => import('@/pages/admin/ObjectTypesPage')),
           },
           {
             path: '/non-compliant',
-            element: wrap(NonCompliantPage),
             handle: { title: 'Muvofiq emaslar' },
+            ...lazy(() => import('@/pages/non-compliant/NonCompliantPage')),
           },
-          { path: '/map', element: wrap(MapPage), handle: { title: 'Xarita' } },
+          {
+            path: '/map',
+            handle: { title: 'Xarita' },
+            ...lazy(() => import('@/pages/map/MapPage')),
+          },
+          { path: '*', handle: { title: 'Sahifa topilmadi' }, element: <NotFoundPage /> },
         ],
       },
     ],
