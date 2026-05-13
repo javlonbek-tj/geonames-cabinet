@@ -20,7 +20,7 @@ const DEFAULT_LIMIT = 10;
 export default function RegistryPage() {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
-  const isAdmin = user?.role === ROLES.ADMIN;
+  const isAdmin = user?.role === ROLES.ADMIN || user?.role === ROLES.SUPERUSER;
   const isDistrictRole = DISTRICT_ROLES.includes(user?.role ?? ('' as never));
   const isRegionalRole = REGIONAL_ROLES.includes(user?.role ?? ('' as never));
 
