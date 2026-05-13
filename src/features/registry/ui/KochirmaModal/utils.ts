@@ -1,25 +1,3 @@
-export function buildPrintHtml(content: HTMLElement, title: string): string {
-  const links = Array.from(
-    document.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]'),
-  )
-    .map((l) => l.outerHTML)
-    .join('\n');
-  const styles = Array.from(document.querySelectorAll('style'))
-    .map((s) => s.outerHTML)
-    .join('\n');
-  return `<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8"/>
-    <title>${title}</title>
-    ${links}
-    ${styles}
-    <style>* { box-sizing: border-box; } body { background: #fff; } @media print { @page { size: A4; margin: 15mm 15mm 20mm 15mm; } }</style>
-  </head>
-  <body>${content.innerHTML}</body>
-</html>`;
-}
-
 function resolveColor(color: string): string {
   const c = document.createElement('canvas');
   c.width = c.height = 1;

@@ -1,9 +1,9 @@
 ﻿import { useRef, useState } from 'react';
 import { Modal, Button } from 'antd';
-import { PrinterOutlined, DownloadOutlined } from '@ant-design/icons';
+import { DownloadOutlined } from '@ant-design/icons';
 import type { GeographicObject } from '@/entities/geographic-object/model/types';
 import KochirmaDocument from './KochirmaDocument';
-import { buildPrintHtml, downloadAsPdf } from './utils';
+import { downloadAsPdf } from './utils';
 
 interface Props {
   obj: GeographicObject | null;
@@ -21,20 +21,6 @@ export default function KochirmaModal({ obj, onClose }: Props) {
     String(d.getMonth() + 1).padStart(2, '0'),
     d.getFullYear(),
   ].join('.');
-
-  const handlePrint = () => {
-    const el = printRef.current;
-    if (!el) return;
-    const html = buildPrintHtml(el, `Ko'chirma — ${obj?.registryNumber ?? ''}`);
-    const blob = new Blob([html], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const win = window.open(url, '_blank', 'width=900,height=700');
-    if (!win) return;
-    win.addEventListener('load', () => {
-      win.print();
-      URL.revokeObjectURL(url);
-    });
-  };
 
   const handleDownload = async () => {
     const el = printRef.current;
@@ -63,13 +49,6 @@ export default function KochirmaModal({ obj, onClose }: Props) {
             onClick={() => void handleDownload()}
           >
             Yuklab olish
-          </Button>
-          <Button
-            type="primary"
-            icon={<PrinterOutlined />}
-            onClick={handlePrint}
-          >
-            Chop etish
           </Button>
         </div>
       }
