@@ -60,7 +60,8 @@ export default function EditRegistryModal({ editObj, onClose }: Props) {
           onClose();
           editForm.resetFields();
         },
-        onError: () => message.error('Xatolik yuz berdi'),
+        onError: (err: { response?: { data?: { message?: string } } }) =>
+          message.error(err.response?.data?.message ?? 'Xatolik yuz berdi'),
       },
     );
   };
