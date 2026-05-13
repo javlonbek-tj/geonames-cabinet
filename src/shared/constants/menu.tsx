@@ -35,24 +35,24 @@ export const menuItems: MenuItem[] = [
     key: '/admin/users',
     icon: <TeamOutlined style={iconStyle} />,
     label: 'Foydalanuvchilar',
-    roles: [ROLES.ADMIN],
+    roles: [ROLES.ADMIN, ROLES.SUPERUSER],
   },
   {
     key: '/admin/object-types',
     icon: <AppstoreOutlined style={iconStyle} />,
     label: 'Obyekt turlari',
-    roles: [ROLES.ADMIN],
+    roles: [ROLES.ADMIN, ROLES.SUPERUSER],
   },
   {
     key: '/non-compliant',
     icon: <WarningOutlined style={iconStyle} />,
     label: 'Nomuvofiqlar',
-    roles: [ROLES.KADASTR_AGENCY, ROLES.DKP_CENTRAL, ROLES.ADMIN],
+    roles: [ROLES.KADASTR_AGENCY, ROLES.DKP_CENTRAL, ROLES.ADMIN, ROLES.SUPERUSER],
   },
   {
     key: '/map',
     icon: <CompassOutlined style={iconStyle} />,
     label: 'Ochiq xarita',
-    roles: [ROLES.ADMIN],
+    roles: [ROLES.ADMIN, ROLES.SUPERUSER],
   },
 ];

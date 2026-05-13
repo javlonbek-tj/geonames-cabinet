@@ -1,5 +1,6 @@
 export type UserRole =
   | 'admin'
+  | 'superuser'
   | 'dkp_filial'
   | 'dkp_regional'
   | 'district_commission'
@@ -11,6 +12,7 @@ export type UserRole =
 
 export const ROLES = {
   ADMIN:               'admin',
+  SUPERUSER:           'superuser',
   DKP_FILIAL:          'dkp_filial',
   DKP_REGIONAL:        'dkp_regional',
   DKP_CENTRAL:         'dkp_central',
@@ -35,6 +37,7 @@ export const REGIONAL_ROLES: UserRole[] = [
 
 export const ROLE_LABELS: Record<UserRole, string> = {
   admin:               'Administrator',
+  superuser:           'Portfolio kuzatuvchi',
   dkp_filial:          'DKP filial xodimi',
   dkp_regional:        'DKP viloyat filiali',
   district_commission: 'Tuman komissiyasi',
