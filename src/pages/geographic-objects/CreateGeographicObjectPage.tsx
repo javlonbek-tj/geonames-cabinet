@@ -264,6 +264,28 @@ export default function CreateGeographicObjectPage() {
           {/* Fayl yuklash — faqat fayl yuklanmagan bo'lsa */}
           {!fileLoaded && (
             <Card title='GeoJSON fayl yuklash' size='small'>
+              <Alert
+                type='info'
+                showIcon
+                className='mb-3'
+                message='GeoJSON properties maydonlari'
+                description={
+                  existsInRegistry ? (
+                    <ul className='mt-1 mb-0 pl-4 text-xs leading-6'>
+                      <li><code>name_uz</code> — nomi (lotin) <span className='text-red-500'>*majburiy</span></li>
+                      <li><code>registry_number</code> — reyestr raqami <span className='text-red-500'>*majburiy</span></li>
+                      <li><code>object_type_id</code> — obyekt turi ID <span className='text-red-500'>*majburiy</span></li>
+                      <li><code>name_krill</code> — nomi (kirill, ixtiyoriy)</li>
+                    </ul>
+                  ) : (
+                    <ul className='mt-1 mb-0 pl-4 text-xs leading-6'>
+                      <li><code>object_type_id</code> — obyekt turi ID (ixtiyoriy, lekin to'g'ri bo'lishi shart)</li>
+                      <li><code>name_uz</code> — nomi (lotin, ixtiyoriy)</li>
+                      <li><code>name_krill</code> — nomi (kirill, ixtiyoriy)</li>
+                    </ul>
+                  )
+                }
+              />
               {parseError && (
                 <Alert
                   title={parseError}
